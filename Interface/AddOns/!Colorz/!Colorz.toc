@@ -1,0 +1,5 @@
+## Interface: 80000
+## Title: !Colorz
+## Notes: Custom colors
+
+!Colorz.lua
