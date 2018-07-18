@@ -3,8 +3,6 @@ objectiveTrackerFrame:SetHeight(600)
 objectiveTrackerFrame:SetClampedToScreen(true)
 objectiveTrackerFrame:SetMovable(true)
 objectiveTrackerFrame:SetUserPlaced(true)
-objectiveTrackerFrame:ClearAllPoints()
-objectiveTrackerFrame:SetPoint("TOPRIGHT", VerticalMultiBarsContainer, "TOPLEFT", -2, 0)
 
 local minimizeButton = objectiveTrackerFrame.HeaderMenu.MinimizeButton
 minimizeButton:EnableMouse(true)
