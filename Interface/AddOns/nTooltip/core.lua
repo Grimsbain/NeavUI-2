@@ -61,13 +61,13 @@ local function ApplyTooltipStyle(self)
         bsize = 12
     end
 
-	if ( not self.Background ) then
-		self.Background = self:CreateTexture(nil, "BACKGROUND", nil, 1)
-		self.Background:SetTexture("Interface\\Buttons\\WHITE8x8")
-		self.Background:SetPoint("TOPLEFT", self, bgsize, -bgsize)
-		self.Background:SetPoint("BOTTOMRIGHT", self, -bgsize, bgsize)
-		self.Background:SetVertexColor(0.0, 0.0, 0.0, 0.60)
-	end
+    if ( not self.Background ) then
+        self.Background = self:CreateTexture(nil, "BACKGROUND", nil, 1)
+        self.Background:SetTexture("Interface\\Buttons\\WHITE8x8")
+        self.Background:SetPoint("TOPLEFT", self, bgsize, -bgsize)
+        self.Background:SetPoint("BOTTOMRIGHT", self, -bgsize, bgsize)
+        self.Background:SetVertexColor(0.0, 0.0, 0.0, 0.60)
+    end
 
     if ( IsAddOnLoaded("!Beautycase") ) then
         self:CreateBeautyBorder(bsize)
