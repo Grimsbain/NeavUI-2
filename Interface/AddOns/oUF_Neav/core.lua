@@ -129,7 +129,7 @@ local function UpdateThreat(self)
         display = UnitThreatPercentageOfLead("player", "target")
     end
 
-	if ( ShowNumericThreat() and not (UnitClassification(self.unit) == "minus") ) then
+	if ( not (UnitClassification(self.unit) == "minus") ) then
 		if ( display and display ~= 0 ) then
 			self.NumericalThreat.value:SetText(format("%1.0f", display).."%")
 			self.NumericalThreat.bg:SetVertexColor(GetThreatStatusColor(status))
