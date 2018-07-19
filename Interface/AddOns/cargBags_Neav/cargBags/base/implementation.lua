@@ -489,7 +489,7 @@ end
 	@param slotID <number> [optional]
 ]]
 function Implementation:PLAYERREAGENTBANKSLOTS_CHANGED(event, slotID)
-	local bagID = -3
+	local bagID = ReagentBankFrame:GetID() -- -3
 
 	self:BAG_UPDATE(event, bagID, slotID)
 end

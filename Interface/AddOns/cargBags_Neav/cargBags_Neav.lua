@@ -441,6 +441,7 @@ function cbNeav:OnBankOpened()
 	if cBneav.BankCustomBags then
 		for _,v in ipairs(cB_CustomBags) do if v.active then cbNeav:ShowBags(cB_Bags["Bank"..v.name]) end end
 	end
+    cbNeavResetNew()
 end
 
 function cbNeav:OnBankClosed()
