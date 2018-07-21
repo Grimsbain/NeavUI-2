@@ -9,7 +9,6 @@
     <Script file="modules\archaeology.lua" />
     <Script file="modules\autogreed.lua" />
     <Script file="modules\autoquest.lua" />
-    <!-- <Script file="modules\bubbles.lua" /> -->
     <Script file="modules\devtools.lua" />
     <Script file="modules\dressroom.lua" />
     <Script file="modules\durability.lua" />
