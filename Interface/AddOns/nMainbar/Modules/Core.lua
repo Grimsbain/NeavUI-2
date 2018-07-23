@@ -83,8 +83,9 @@ end
 
 	-- Pet Bar
 
+SlidingActionBarTexture0:SetTexture(nil)
+SlidingActionBarTexture1:SetTexture(nil)
 PetActionBarFrame:SetFrameStrata("MEDIUM")
-
 PetActionBarFrame:SetScale(cfg.petBar.scale)
 PetActionBarFrame:SetAlpha(cfg.petBar.alpha)
 
