@@ -4,7 +4,7 @@ ifeq ($(strip $(VERSION)),)
 VERSION := $(shell git rev-parse --short HEAD)
 endif
 
-NEAVUI-GRIM_ZIP = NeavUI-Grimsbain_v$(VERSION).zip
+NEAVUI-GRIM_ZIP = NeavUI-Grimsbain_$(VERSION).zip
 
 PROJECTS = $(NEAVUI-GRIM_ZIP)
 

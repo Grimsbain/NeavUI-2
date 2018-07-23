@@ -123,22 +123,12 @@ local function CreateScrollFrame(name, width, height, numChild)
 	scrollFrame:SetSize(width, height)
 	scrollFrame:SetPoint("CENTER")
 	scrollFrame:Hide()
-	-- scrollFrame:SetBackdrop({
-		-- bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
-		-- edgeFile = "Interface\\Buttons\\WHITE8x8",
-		-- tile = false, tileSize = 16, edgeSize = 1,
-	-- })
-	-- scrollFrame:SetBackdropColor(1, 0, 0, .25)
-	-- scrollFrame:SetBackdropBorderColor(1, 1, 1, 0)
 
 	scrollFrame.scrollChild = CreateFrame("FRAME",  name.."ScrollChild")
 	scrollFrame:SetScrollChild(scrollFrame.scrollChild)
 
 	scrollFrame.scrollBar = _G[scrollFrame:GetName().."ScrollBar"]
 	scrollFrame.scrollBar:SetAlpha(0)
-	-- scrollFrame.scrollBar.ScrollUpButton:SetAlpha(0)
-	-- scrollFrame.scrollBar.ScrollDownButton:SetAlpha(0)
-	-- scrollFrame.scrollBar.ThumbTexture:SetTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
 
 	SetupChildFrames(scrollFrame, "DoubleTemplate", numChild)
 
