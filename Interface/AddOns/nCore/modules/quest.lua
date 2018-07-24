@@ -2,7 +2,7 @@ local _, nCore = ...
 
 local function UpdateQuestText(self)
 	local _, numQuests = GetNumQuestLogEntries()
-	self.Text:SetFormattedText("%d/%s", numQuests, MAX_QUESTS)
+    WorldMapFrameTitleText:SetFormattedText("%s - %d/%s", MAP_AND_QUEST_LOG, numQuests, MAX_QUESTS)
 end
 
 function nQuests_OnLoad(self)

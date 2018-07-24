@@ -2,6 +2,7 @@ local _, nCore = ...
 
 function nCore_OnLoad(self)
     self:RegisterEvent("PLAYER_LOGIN")
+    self:RegisterEvent("ADDON_LOADED")
 
     if ( AddonList ) then
         _G["ADDON_DEMAND_LOADED"] = "On Demand"
@@ -15,6 +16,27 @@ end
 function nCore_OnEvent(self, event, ...)
     if ( event == "PLAYER_LOGIN" ) then
         SetCVar("ScreenshotQuality", 10)
+    elseif ( event == "ADDON_LOADED" ) then
+        local name = ...
+        if ( name == "nCore" ) then
+            nCore:SetDefaultOptions()
+            nCore:AltBuy()
+            nCore:ArchaeologyHelper()
+            nCore:AutoGreed()
+            nCore:AutoQuest()
+            nCore:Dressroom()
+            nCore:Durability()
+            nCore:ErrorFilter()
+            nCore:Fonts()
+            nCore:MapCoords()
+            nCore:MoveTalkingHeads()
+            nCore:ObjectiveTracker()
+            nCore:Skins()
+            nCore:SpellID()
+            nCore:VignetteAlert()
+
+			self:UnregisterEvent("ADDON_LOADED")
+        end
     end
 end
 

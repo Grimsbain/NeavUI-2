@@ -1,6 +1,4 @@
 <Ui>
-    <Script file="coords.lua" />
-
 	<FontFamily name="nCore_Coords_Font" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Fonts\FRIZQT__.TTF" height="15" outline="NORMAL">
@@ -54,7 +52,7 @@
 		</Member>
 	</FontFamily>
 
-    <Frame name="nCore_Coords" parent="WorldMapFrame" frameStrata="HIGH" enableMouse="false" hidden="false">
+    <Frame name="nCore_Coords" parent="WorldMapFrame" frameStrata="HIGH" enableMouse="false" hidden="false" virtual="true">
         <Size x="325" y="32" />
         <Anchors>
             <Anchor point="BOTTOMLEFT" relativeTo="WorldMapFrame" relativePoint="BOTTOMLEFT">
@@ -103,9 +101,6 @@
 				</Layers>
 			</Frame>
 		</Frames>
-        <Scripts>
-			<OnLoad  function="nCore_Coords_OnLoad" />
-			<OnUpdate function="nCore_Coords_OnUpdate" />
-		</Scripts>
     </Frame>
+    <Script file="coords.lua" />
 </Ui>

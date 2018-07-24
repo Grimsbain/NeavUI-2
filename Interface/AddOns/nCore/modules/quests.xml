@@ -1,36 +1,9 @@
 <Ui>
 	<Script file="quest.lua"/>
-	<Frame name="nQuests" parent="WorldMapFrame" frameStrata="HIGH" enableMouse="false" hidden="false">
-		<Size x="100" y="16" />
-        <Anchors>
-            <Anchor point="TOPRIGHT" relativeTo="WorldMapFrameTitleBg">
-                <Offset>
-                    <AbsDimension x="-50" y="0" />
-                </Offset>
-            </Anchor>
-        </Anchors>
-		<Frames>
-			<Frame name="$parentOverylay" parentKey="Overlay" virtual="false">
-				<Size x="100" y="16" />
-				<Anchors>
-					<Anchor point="TOPRIGHT">
-						<Offset x="0" y="0"/>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" text="" inherits="SystemFont_Shadow_Med1" parentKey="Text">
-							<Anchors>
-								<Anchor point="RIGHT" x="0" y="0"/>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnLoad function="nQuests_OnLoad"/>
-					<OnEvent function="nQuests_OnEvent"/>
-				</Scripts>
-			</Frame>
-		</Frames>
+	<Frame name="nQuests">
+            <Scripts>
+                <OnLoad function="nQuests_OnLoad"/>
+                <OnEvent function="nQuests_OnEvent"/>
+            </Scripts>
 	</Frame>
 </Ui>
