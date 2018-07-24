@@ -4,6 +4,7 @@ My personal version of NeavUI.
 Changes
 
 nCore
+ - Ingame Options - Enable/disable most nCore features ingame.
  - Quick Archaeology - Double right click to survey.
  - Auto Quest - Hold shift to auto pickup/turnin quests.
  - Move Talking Head - Use /alertframemover to move the talking heads frame.
