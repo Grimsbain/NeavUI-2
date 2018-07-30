@@ -6,6 +6,9 @@ local format = string.format
 local match = string.match
 local floor = math.floor
 
+local tags = oUF.Tags.Methods
+local events = oUF.Tags.Events
+
 local function FormatValue(value)
     if ( value >= 1e6 ) then
         return tonumber(format("%.1f", value/1e6)).."m"
@@ -16,8 +19,7 @@ local function FormatValue(value)
     end
 end
 
-oUF.Tags.Events["neav:AdditionalPower"] = "UNIT_POWER_UPDATE UNIT_DISPLAYPOWER UNIT_MAXPOWER"
-oUF.Tags.Methods["neav:AdditionalPower"] = function(unit)
+tags["neav:AdditionalPower"] = function(unit)
     local min, max = UnitPower(unit, Enum.PowerType.Mana), UnitPowerMax(unit, Enum.PowerType.Mana)
     if ( min == max ) then
         return FormatValue(min)
@@ -25,47 +27,47 @@ oUF.Tags.Methods["neav:AdditionalPower"] = function(unit)
         return FormatValue(min).."/"..FormatValue(max)
     end
 end
+events["neav:AdditionalPower"] = "UNIT_POWER_UPDATE UNIT_DISPLAYPOWER UNIT_MAXPOWER"
 
-oUF.Tags.Events["neav:pvptimer"] = "PLAYER_ENTERING_WORLD PLAYER_FLAGS_CHANGED"
-oUF.Tags.Methods["neav:pvptimer"] = function(unit)
+tags["neav:pvptimer"] = function(unit)
     if ( not IsPVPTimerRunning() or GetPVPTimer() == 301000 or GetPVPTimer() == 999 ) then
         return ""
     end
 
     return ns.FormatTime(floor(GetPVPTimer()/1000))
 end
+events["neav:pvptimer"] = "PLAYER_ENTERING_WORLD PLAYER_FLAGS_CHANGED"
 
-oUF.Tags.Events["neav:level"] = "UNIT_LEVEL PLAYER_LEVEL_UP UNIT_FACTION UNIT_TARGETABLE_CHANGED"
-oUF.Tags.Methods["neav:level"] = function(unit)
+tags["neav:level"] = function(unit)
     local r, g, b
     local targetEffectiveLevel = UnitEffectiveLevel(unit)
 
-	if ( UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) ) then
-		targetEffectiveLevel = UnitBattlePetLevel(unit)
-		r, g, b = 1.0, 0.82, 0.0
-	elseif ( targetEffectiveLevel > 0 ) then
-		if ( UnitCanAttack("player", unit) ) then
-			local color = GetCreatureDifficultyColor(targetEffectiveLevel)
-			r, g, b = color.r, color.g, color.b
-		else
-			r, g, b = 1.0, 0.82, 0.0
-		end
+    if ( UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) ) then
+        targetEffectiveLevel = UnitBattlePetLevel(unit)
+        r, g, b = 1.0, 0.82, 0.0
+    elseif ( targetEffectiveLevel > 0 ) then
+        if ( UnitCanAttack("player", unit) ) then
+            local color = GetCreatureDifficultyColor(targetEffectiveLevel)
+            r, g, b = color.r, color.g, color.b
+        else
+            r, g, b = 1.0, 0.82, 0.0
+        end
     else
-		r, g, b = 1, 0, 0
+        r, g, b = 1, 0, 0
         targetEffectiveLevel = "??"
     end
 
     return format("|cff%02x%02x%02x%s|r", r*255, g*255, b*255, targetEffectiveLevel)
 end
+events["neav:level"] = "UNIT_LEVEL PLAYER_LEVEL_UP UNIT_CLASSIFICATION_CHANGED"
 
-oUF.Tags.Events["neav:name"] = "UNIT_NAME_UPDATE"
-oUF.Tags.Methods["neav:name"] = function(unit)
+tags["neav:name"] = function(unit)
     local r, g, b
     local name, _ = UnitName(unit) or UNKNOWN
     local _, class = UnitClass(unit)
 
     if ( unit == "player" or unit:match("party(%d)") ) then
-		local color = oUF.colors.class[class]
+        local color = oUF.colors.class[class]
         r, g, b = color[1], color[2], color[3]
     elseif ( unit == "targettarget" or unit == "focustarget" or unit:match("arena(%d)target") ) then
         r, g, b = GameTooltip_UnitColor(unit)
@@ -77,11 +79,12 @@ oUF.Tags.Methods["neav:name"] = function(unit)
 
     return format("|cff%02x%02x%02x%s|r", r*255, g*255, b*255, name)
 end
+events["neav:name"] = "UNIT_NAME_UPDATE"
 
 local timer = {}
 
-oUF.Tags.Events["neav:afk"] = "PLAYER_FLAGS_CHANGED"
-oUF.Tags.Methods["neav:afk"] = function(unit)
+events["neav:afk"] = "PLAYER_FLAGS_CHANGED"
+tags["neav:afk"] = function(unit)
     local name, _ = UnitName(unit) or UNKNOWN
 
     if ( UnitIsAFK(unit) ) then

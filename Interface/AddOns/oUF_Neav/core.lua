@@ -250,11 +250,11 @@ local function StatusFlash_OnUpdate(self, elapsed)
 		self.CombatIndicator.Glow:Hide()
 	elseif ( self.CombatIndicator:IsShown() ) then
 		self.CombatIndicator.Glow:Show()
-		self.Level:Hide()
+		self.Level:SetAlpha(.01)
 	else
 		self.RestingIndicator.Glow:Hide()
 		self.CombatIndicator.Glow:Hide()
-		self.Level:Show()
+		self.Level:SetAlpha(1)
 	end
 end
 
