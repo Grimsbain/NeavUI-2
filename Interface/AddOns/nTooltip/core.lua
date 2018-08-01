@@ -1,6 +1,8 @@
 local _, nTooltip = ...
 local cfg = nTooltip.Config
 
+local beautyBorderLoaded = IsAddOnLoaded("!Beautycase")
+
 local select = select
 local format = string.format
 local floor = floor
@@ -69,55 +71,46 @@ local function ApplyTooltipStyle(self)
         self.Background:SetVertexColor(0.0, 0.0, 0.0, 0.60)
     end
 
-    if ( IsAddOnLoaded("!Beautycase") ) then
-        self:CreateBeautyBorder(bsize)
+    if ( beautyBorderLoaded ) then
+        if ( not self:HasBeautyBorder() ) then
+            self:CreateBeautyBorder(bsize)
+        end
     end
 end
 
 for _, tooltip in pairs({
     GameTooltip,
-    ItemRefTooltip,
-	BattlePetTooltip,
+    BattlePetTooltip,
 	EmbeddedItemTooltip,
-
+    ItemRefTooltip,
+    ItemRefShoppingTooltip1,
+    ItemRefShoppingTooltip2,
+    ItemRefShoppingTooltip3,
     ShoppingTooltip1,
     ShoppingTooltip2,
     ShoppingTooltip3,
-
     WorldMapTooltip,
-
+    WorldMapCompareTooltip1,
+    WorldMapCompareTooltip2,
+    WorldMapCompareTooltip3,
     DropDownList1MenuBackdrop,
     DropDownList2MenuBackdrop,
-
     ConsolidatedBuffsTooltip,
-
+    AutoCompleteBox,
     ChatMenu,
     EmoteMenu,
     LanguageMenu,
     VoiceMacroMenu,
-
     FriendsTooltip,
-
     FloatingGarrisonFollowerTooltip,
     FloatingBattlePetTooltip,
     FloatingPetBattleAbilityTooltip,
-
     ReputationParagonTooltip,
-
-	QuestScrollFrame.StoryTooltip,
+    LibDBIconTooltip,
+    SmallTextTooltip,
+    LibItemUpdateInfoTooltip,
 }) do
     ApplyTooltipStyle(tooltip)
-end
-
-    -- Item Compare Tooltips
-
-for i, tooltip in ipairs(WorldMapTooltip.ItemTooltip.Tooltip.shoppingTooltips) do
-    ApplyTooltipStyle(tooltip)
-    local tooltipParent = tooltip:GetParent()
-    tooltip:SetFrameLevel(tooltipParent:GetFrameLevel() + 2)
-    tooltip:HookScript("OnUpdate", function(self)
-        self:SetBackdropColor(0, 0, 0, .8)
-    end)
 end
 
     -- Itemquaility border, we use our beautycase functions
@@ -151,42 +144,6 @@ if ( cfg.itemqualityBorderColor ) then
         end
     end
 end
-
-    -- Itemlvl (by Gsuz) - http://www.tukui.org/forums/topic.php?id=10151
-
--- local function GetItemLevel(unit)
-    -- local total, item = 0, 0
-    -- for i, v in pairs({
-        -- "Head",
-        -- "Neck",
-        -- "Shoulder",
-        -- "Back",
-        -- "Chest",
-        -- "Wrist",
-        -- "Hands",
-        -- "Waist",
-        -- "Legs",
-        -- "Feet",
-        -- "Finger0",
-        -- "Finger1",
-        -- "Trinket0",
-        -- "Trinket1",
-        -- "MainHand",
-        -- "SecondaryHand",
-    -- }) do
-        -- local slot = GetInventoryItemLink(unit, GetInventorySlotInfo(v.."Slot"))
-        -- if (slot ~= nil ) then
-            -- item = item + 1
-            -- total = total + select(4, GetItemInfo(slot))
-        -- end
-    -- end
-
-    -- if (item > 0 ) then
-        -- return floor(total / item + 0.5)
-    -- end
-
-    -- return 0
--- end
 
 local function GetFormattedUnitType(unit)
     local creaturetype = UnitCreatureType(unit)
@@ -292,13 +249,13 @@ local function GetUnitPVPIcon(unit)
 
     if ( UnitIsPVPFreeForAll(unit) ) then
         if ( cfg.showPVPIcons ) then
-            return "|TInterface\\AddOns\\nTooltip\\media\\UI-PVP-FFA:12|t"
+            return CreateTextureMarkup("Interface\\AddOns\\nTooltip\\media\\UI-PVP-FFA", 32,32, 16,16, 0,1,0,1, -2,-1)
         else
             return "|cffFF0000# |r"
         end
     elseif ( factionGroup and UnitIsPVP(unit) ) then
         if ( cfg.showPVPIcons ) then
-            return "|TInterface\\AddOns\\nTooltip\\media\\UI-PVP-"..factionGroup..":12|t"
+            return CreateTextureMarkup("Interface\\AddOns\\nTooltip\\media\\UI-PVP-"..factionGroup, 32,32, 14,14, 0,1,0,1, -2,-1)
         else
             return "|cff00FF00# |r"
         end
@@ -340,19 +297,17 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
     end
 
     if ( UnitExists(unit) and UnitName(unit) ~= UNKNOWN ) then
-        local ilvl = 0
         local specIcon = ""
         local lastUpdate = 30
         for index, _ in pairs(self.inspectCache) do
             local inspectCache = self.inspectCache[index]
             if ( inspectCache.GUID == UnitGUID(unit) ) then
-                ilvl = inspectCache.itemLevel or 0
                 specIcon = inspectCache.specIcon or ""
                 lastUpdate = inspectCache.lastUpdate and math.abs(inspectCache.lastUpdate - floor(GetTime())) or 30
             end
         end
 
-            -- Fetch inspect information (ilvl and spec)
+            -- Fetch Inspect Information
 
         if ( unit and CanInspect(unit) ) then
             if ( not self.inspectRefresh and lastUpdate >= 30 and not self.blockInspectRequests ) then
@@ -385,7 +340,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
             end
         end
 
-            -- Tooltip level text
+            -- Level
 
         for i = 2, GameTooltip:NumLines() do
             if ( _G["GameTooltipTextLeft"..i]:GetText():find("^"..TOOLTIP_UNIT_LEVEL:gsub("%%s", ".+")) ) then
@@ -393,19 +348,19 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
             end
         end
 
-            -- Role text
+            -- Role
 
         if ( cfg.showUnitRole ) then
             self:AddLine(GetUnitRoleString(unit), 1, 1, 1)
         end
 
-            -- Mouse over target with raidicon support
+            -- Mouseover Target
 
         if ( cfg.showMouseoverTarget ) then
             AddMouseoverTarget(self, unit)
         end
 
-            -- Pvp flag prefix
+            -- PvP Flag Prefix
 
         for i = 3, GameTooltip:NumLines() do
             if ( _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) ) then
@@ -418,12 +373,12 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
         GameTooltipTextLeft1:SetText(GetUnitRaidIcon(unit)..GameTooltipTextLeft1:GetText())
 
-            -- Afk and dnd prefix
+            -- Away and DND
 
         if ( UnitIsAFK(unit) ) then
-            self:AppendText("|cff00ff00 <AFK>|r")
+            self:AppendText("|cff00ff00 <"..CHAT_MSG_AFK..">|r")
         elseif ( UnitIsDND(unit) ) then
-            self:AppendText("|cff00ff00 <DND>|r")
+            self:AppendText("|cff00ff00 <"..DEFAULT_DND_MESSAGE..">|r")
         end
 
             -- Player realm names
@@ -468,17 +423,17 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
     end
 end)
 
-GameTooltip:HookScript("OnTooltipCleared", function(self)
-    GameTooltipStatusBar:ClearAllPoints()
-    GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0.5, 3)
-    GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -1, 3)
-    GameTooltipStatusBar:SetBackdropColor(0, 1, 0, 0.3)
+-- GameTooltip:HookScript("OnTooltipCleared", function(self)
+    -- GameTooltipStatusBar:ClearAllPoints()
+    -- GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0.5, 3)
+    -- GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -1, 3)
+    -- GameTooltipStatusBar:SetBackdropColor(0, 1, 0, 0.3)
 
-    if ( cfg.reactionBorderColor and self.beautyBorder ) then
-        self:SetBeautyBorderTexture("default")
-        self:SetBeautyBorderColor(1, 1, 1)
-    end
-end)
+    -- if ( cfg.reactionBorderColor and self.beautyBorder ) then
+        -- self:SetBeautyBorderTexture("default")
+        -- self:SetBeautyBorderColor(1, 1, 1)
+    -- end
+-- end)
 
     -- Custom healthbar coloring
 
@@ -559,7 +514,6 @@ hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
     end
 end)
 
-
 GameTooltip:RegisterEvent("INSPECT_READY")
 GameTooltip:SetScript("OnEvent", function(self, event, GUID)
     if ( not self:IsShown() ) then
@@ -586,11 +540,13 @@ GameTooltip:SetScript("OnEvent", function(self, event, GUID)
     local _, _, _, icon = GetSpecializationInfoByID(GetInspectSpecialization(unit))
     local now = GetTime()
 
+    local iconMarkup = CreateTextureMarkup(icon, 64,64, 13,13, 0.10,.90,0.10,0.90, 0,0)
+
     local matchFound
     for index, _ in pairs(self.inspectCache) do
         local inspectCache = self.inspectCache[index]
         if ( inspectCache.GUID == GUID ) then
-            inspectCache.specIcon = icon and " |T"..icon..":0|t" or ""
+            inspectCache.specIcon = icon and " "..iconMarkup or ""
             inspectCache.lastUpdate = floor(now)
             matchFound = true
         end
@@ -599,7 +555,7 @@ GameTooltip:SetScript("OnEvent", function(self, event, GUID)
     if not matchFound then
         local GUIDInfo = {
             ["GUID"] = GUID,
-            ["specIcon"] = icon and " |T"..icon..":0|t" or "",
+            ["specIcon"] = icon and " "..iconMarkup or "",
             ["lastUpdate"] = floor(now)
         }
         table.insert(self.inspectCache, GUIDInfo)
