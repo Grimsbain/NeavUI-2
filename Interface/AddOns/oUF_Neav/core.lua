@@ -5,7 +5,6 @@ local oUF = ns.oUF or oUF
 oUF.colors.power["MANA"] = {0, 0.55, 1}
 
 local _, playerClass = UnitClass("player")
-local playerSpec = GetSpecialization()
 local charTexPath = "Interface\\CharacterFrame\\"
 local tarTexPath = "Interface\\TargetingFrame\\"
 local texPath = tarTexPath.."UI-TargetingFrame"
@@ -145,6 +144,8 @@ end
 	-- Update Alt Resource Display
 
 local function ToggleAltResources(visible)
+    local playerSpec = GetSpecialization()
+
     if ( playerClass == "SHAMAN" ) then
         if ( visible ) then TotemFrame:Show() else TotemFrame:Hide() end
     elseif ( playerClass == "DEATHKNIGHT" ) then
@@ -430,8 +431,6 @@ local function UpdatePlayerFrame(self, event, ...)
 		UpdateTotemFrameAnchor(self)
 	elseif ( event == "PLAYER_TOTEM_UPDATE" ) then
 		UpdateTotemFrameAnchor(self)
-	elseif ( event == "PLAYER_SPECIALIZATION_CHANGED" ) then
-		playerSpec = GetSpecialization()
 	elseif ( event == "CINEMATIC_STOP" ) then
 		UpdateFlashStatus(self)
 	elseif ( event == "GROUP_ROSTER_UPDATE" ) then
@@ -972,7 +971,7 @@ local function CreateUnitLayout(self, unit)
 
             -- Holy Power Bar (Retribution Only)
 
-        if ( playerClass == "PALADIN" and playerSpec == SPEC_PALADIN_RETRIBUTION ) then
+        if ( playerClass == "PALADIN" and GetSpecialization() == SPEC_PALADIN_RETRIBUTION ) then
             PaladinPowerBarFrame:ClearAllPoints()
             PaladinPowerBarFrame:SetParent(oUF_Neav_Player)
             PaladinPowerBarFrame:SetScale(config.units.player.scale * 0.81)
@@ -1165,7 +1164,6 @@ local function CreateUnitLayout(self, unit)
         self:RegisterEvent("PLAYER_UPDATE_RESTING", UpdatePlayerFrame)
         self:RegisterEvent("PLAYER_TALENT_UPDATE", UpdatePlayerFrame)
         self:RegisterEvent("PLAYER_TOTEM_UPDATE", UpdatePlayerFrame)
-		self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", UpdatePlayerFrame)
 		self:RegisterEvent("CINEMATIC_STOP", UpdatePlayerFrame)
         self:RegisterEvent("GROUP_ROSTER_UPDATE", UpdatePlayerFrame)
         self:RegisterEvent("UNIT_ENTERED_VEHICLE", UpdatePlayerFrame)
