@@ -72,7 +72,13 @@ nMainbar.Config = {
 
     multiBarBottomLeft = {
         mouseover = false,
-        scale = 1,
+        hiddenAlpha = 0,
+        alpha = 1,
+    },
+
+    -- Only works with "useFakeBottomRightBar" option.
+    multiBarBottomRight = {
+        mouseover = false,
         hiddenAlpha = 0,
         alpha = 1,
     },

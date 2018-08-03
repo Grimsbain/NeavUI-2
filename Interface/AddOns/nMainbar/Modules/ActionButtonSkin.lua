@@ -238,6 +238,31 @@ hooksecurefunc("ActionButton_Update", function(self)
     end
 end)
 
+hooksecurefunc("ExtraActionBar_Update", function(self)
+    local bar = ExtraActionBarFrame
+    if ( HasExtraActionBar() and not bar.Skinned ) then
+        bar.button.style:Hide()
+
+        local normalTexture = bar.button.NormalTexture
+        normalTexture:ClearAllPoints()
+        normalTexture:SetPoint("TOPRIGHT", bar.button, 4, 4)
+        normalTexture:SetPoint("BOTTOMLEFT", bar.button, -4, -4)
+
+        bar.button:SetNormalTexture(path.."textureNormal")
+
+        bar.button:SetCheckedTexture(path.."textureChecked")
+        bar.button:GetCheckedTexture():SetAllPoints(normalTexture)
+
+        bar.button:SetPushedTexture(path.."texturePushed")
+        bar.button:GetPushedTexture():SetAllPoints(normalTexture)
+
+        bar.button:SetHighlightTexture(path.."textureHighlight")
+        bar.button:GetHighlightTexture():SetAllPoints(normalTexture)
+
+        bar.Skinned = true
+    end
+end)
+
 hooksecurefunc("ActionButton_UpdateCount", function(self)
 	local text = self.Count
 

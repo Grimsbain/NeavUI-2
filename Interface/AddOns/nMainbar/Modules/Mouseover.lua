@@ -55,19 +55,29 @@ end
 
 	-- Set Mouseovers
 
-if ( cfg.multiBarRight.mouseover ) then
-	EnableMouseOver("MultiBarLeftButton", MultiBarLeft, 1, 12, cfg.multiBarLeft.alpha, cfg.multiBarLeft.hiddenAlpha)
-    EnableMouseOver("MultiBarRightButton", MultiBarRight, 1, 12, cfg.multiBarRight.alpha, cfg.multiBarRight.hiddenAlpha)
-end
+C_Timer.After(0.001, function()
+    if ( cfg.multiBarRight.mouseover ) then
+        if MultiBarLeft then
+            EnableMouseOver("MultiBarLeftButton", MultiBarLeft, 1, 12, cfg.multiBarRight.alpha, cfg.multiBarRight.hiddenAlpha)
+        end
+        if MultiBarRight then
+            EnableMouseOver("MultiBarRightButton", MultiBarRight, 1, 12, cfg.multiBarRight.alpha, cfg.multiBarRight.hiddenAlpha)
+        end
+    end
 
-if ( cfg.multiBarBottomLeft.mouseover ) then
-    EnableMouseOver("MultiBarBottomLeftButton", MultiBarBottomLeft, 1, 12, cfg.multiBarBottomLeft.alpha, cfg.multiBarBottomLeft.hiddenAlpha)
-end
+    if ( cfg.multiBarBottomLeft.mouseover ) then
+        EnableMouseOver("MultiBarBottomLeftButton", MultiBarBottomLeft, 1, 12, cfg.multiBarBottomLeft.alpha, cfg.multiBarBottomLeft.hiddenAlpha)
+    end
 
-if ( cfg.petBar.mouseover ) then
-    EnableMouseOver("PetActionButton", PetActionBarFrame, 1, 10, cfg.petBar.alpha, cfg.petBar.hiddenAlpha)
-end
+    if ( cfg.multiBarBottomRight.mouseover ) then
+        EnableMouseOver("FakeMultiBarBottomRight1Button", FakeMultiBarBottomRight1, 1, 12, cfg.multiBarBottomRight.alpha, cfg.multiBarBottomRight.hiddenAlpha)
+    end
 
-if ( cfg.stanceBar.mouseover ) then
-    EnableMouseOver("StanceButton", StanceBarFrame, 1, NUM_STANCE_SLOTS, cfg.stanceBar.alpha, cfg.stanceBar.hiddenAlpha)
-end
+    if ( cfg.petBar.mouseover ) then
+        EnableMouseOver("PetActionButton", PetActionBarFrame, 1, 10, cfg.petBar.alpha, cfg.petBar.hiddenAlpha)
+    end
+
+    if ( cfg.stanceBar.mouseover ) then
+        EnableMouseOver("StanceButton", StanceBarFrame, 1, NUM_STANCE_SLOTS, cfg.stanceBar.alpha, cfg.stanceBar.hiddenAlpha)
+    end
+end)

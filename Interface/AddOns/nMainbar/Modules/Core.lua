@@ -9,6 +9,39 @@ function nMainbar:IsTaintable()
 	return (InCombatLockdown() or (UnitAffectingCombat("player") or UnitAffectingCombat("pet")))
 end
 
+function nMainbar:CreateAnchor(name, width, height, location)
+    local anchorFrame = CreateFrame("Frame", name.."_Anchor", UIParent)
+    anchorFrame:SetSize(width, height)
+    anchorFrame:SetScale(1)
+    anchorFrame:SetPoint(unpack(location))
+    anchorFrame:SetFrameStrata("HIGH")
+    anchorFrame:SetMovable(true)
+    anchorFrame:SetClampedToScreen(true)
+    anchorFrame:SetUserPlaced(true)
+    anchorFrame:SetBackdrop({bgFile="Interface\\MINIMAP\\TooltipBackdrop-Background",})
+    anchorFrame:EnableMouse(true)
+    anchorFrame:RegisterForDrag("LeftButton")
+    anchorFrame:Hide()
+
+    anchorFrame:CreateBeautyBorder(16)
+	anchorFrame:SetBeautyBorderPadding(4)
+
+    anchorFrame.text = anchorFrame:CreateFontString(nil, "OVERLAY")
+    anchorFrame.text:SetAllPoints(anchorFrame)
+    anchorFrame.text:SetFont(STANDARD_TEXT_FONT, 13)
+    anchorFrame.text:SetText(name)
+
+    anchorFrame:SetScript("OnDragStart", function(self)
+        self:StartMoving()
+    end)
+
+    anchorFrame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+    end)
+
+    return anchorFrame
+end
+
 	-- End Caps
 
 if ( cfg.MainMenuBar.hideGryphons ) then
@@ -52,14 +85,26 @@ hooksecurefunc("MultiActionBar_Update", function(self)
 	end
 end)
 
-    -- Move ExtraActionButton
+    -- Extra Action Button
 
-ExtraActionButton1:SetScript("OnShow", function(self)
-    if ( nMainbar:IsTaintable() ) then return end
+local ExtraActionBarFrameLocation = {"CENTER", UIParent, "CENTER", -300, -150}
+local ExtraActionBarFrameAnchor = nMainbar:CreateAnchor("EAB", ExtraActionButton1:GetWidth(), ExtraActionButton1:GetHeight(), ExtraActionBarFrameLocation)
 
-	ExtraActionButton1:ClearAllPoints()
-	ExtraActionButton1:SetPoint("CENTER", UIParent, "CENTER", -300, -150)
-end)
+SlashCmdList["nMainbar_MoveExtraActionBar"] = function()
+    if ( InCombatLockdown() ) then
+        print("nMainbar: You cant do this in combat!")
+        return
+    end
+    if ( not ExtraActionBarFrameAnchor:IsShown() ) then
+        ExtraActionBarFrameAnchor:Show()
+    else
+        ExtraActionBarFrameAnchor:Hide()
+    end
+end
+SLASH_nMainbar_MoveExtraActionBar1 = "/moveextraactionbar"
+
+ExtraActionButton1:ClearAllPoints()
+ExtraActionButton1:SetPoint("CENTER", ExtraActionBarFrameAnchor)
 
 	-- Possess Bar
 
