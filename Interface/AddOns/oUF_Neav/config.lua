@@ -38,12 +38,12 @@ ns.Config = {
     },
 
     font = {
-        normal = STANDARD_TEXT_FONT,														-- General font for all other                      
+        normal = STANDARD_TEXT_FONT,														-- General font for all other
         normalSize = 13,
 
         -- normalBig = STANDARD_TEXT_FONT,														-- Name font
         -- normalBigSize = 14,
-        
+
         numberFont = "Interface\\AddOns\\oUF_Neav\\media\\fontNumber.ttf",
     },
 
@@ -193,7 +193,7 @@ ns.Config = {
             disableAura = false,                                                            -- Disable Auras on this unitframe.
             debuffsOnly = false,                                                             -- Only show debuffs.
             onlyShowPlayer = true,
-            
+
             mouseoverText = false,
             healthTag = "$cur - $perc",
             healthTagFull = "$cur",
@@ -276,10 +276,10 @@ ns.Config = {
             auraSize = 32,
 			numBuffs = 8,
 			numDebuffs = 8,
-			
+
 			debuffsOnly = true,
             onlyShowPlayer = false,
-			
+
             mouseoverText = true,
             healthTag = "$cur/$max",
             healthTagFull = "$cur",

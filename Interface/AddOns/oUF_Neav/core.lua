@@ -1220,28 +1220,59 @@ local function CreateUnitLayout(self, unit)
 
     if ( unit == "target" ) then
         if ( not config.units[ns.cUnit(unit)].disableAura ) then
-            self.Auras = CreateFrame("Frame", "$parent_Auras", self)
-            self.Auras.gap = true
-            self.Auras.size = 20
-            self.Auras:SetHeight(self.Auras.size * 3)
-            self.Auras:SetWidth(self.Auras.size * 5)
-            self.Auras:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -2, -5)
-            self.Auras.initialAnchor = "TOPLEFT"
-            self.Auras["growth-x"] = "RIGHT"
-            self.Auras["growth-y"] = "DOWN"
-            self.Auras.numBuffs = config.units.target.numBuffs
-            self.Auras.numDebuffs = config.units.target.numDebuffs
-            self.Auras.onlyShowPlayer = config.units.target.onlyShowPlayer
-            self.Auras.spacing = 4.5
-            self.Auras.showStealableBuffs = true
-			self.Auras.debuffFilter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY"
+            if ( config.units.target.showDebuffsOnTop ) then
+                -- Debuffs
+                self.Debuffs = CreateFrame("Frame", "$parentDebuffs", self)
+                self.Debuffs.gap = true
+                self.Debuffs.size = 20
+                self.Debuffs:SetHeight(self.Debuffs.size * 3)
+                self.Debuffs:SetWidth(self.Debuffs.size * 5)
+                self.Debuffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 2, 5)
+                self.Debuffs.initialAnchor = "BOTTOMLEFT"
+                self.Debuffs["growth-x"] = "RIGHT"
+                self.Debuffs["growth-y"] = "UP"
+                self.Debuffs.num = config.units.target.numDebuffs
+                self.Debuffs.onlyShowPlayer = config.units.target.onlyShowPlayerDebuffs
+                self.Debuffs.spacing = 4.5
 
-            self.Auras.PostUpdateGapIcon = function(self, unit, icon, visibleBuffs)
-                icon:Hide()
+                -- Buffs
+                self.Buffs = CreateFrame("Frame", "$parentBuffs", self)
+                self.Buffs.gap = true
+                self.Buffs.size = 20
+                self.Buffs:SetHeight(self.Buffs.size * 3)
+                self.Buffs:SetWidth(self.Buffs.size * 5)
+                self.Buffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -2, -5)
+                self.Buffs.initialAnchor = "TOPLEFT"
+                self.Buffs["growth-x"] = "RIGHT"
+                self.Buffs["growth-y"] = "DOWN"
+                self.Buffs.num = config.units.target.numBuffs
+                self.Buffs.onlyShowPlayer = config.units.target.onlyShowPlayerBuffs
+                self.Buffs.spacing = 4.5
+                self.Buffs.showStealableBuffs = true
+            else
+                self.Auras = CreateFrame("Frame", "$parent_Auras", self)
+                self.Auras.gap = true
+                self.Auras.size = 20
+                self.Auras:SetHeight(self.Auras.size * 3)
+                self.Auras:SetWidth(self.Auras.size * 5)
+                self.Auras:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -2, -5)
+                self.Auras.initialAnchor = "TOPLEFT"
+                self.Auras["growth-x"] = "RIGHT"
+                self.Auras["growth-y"] = "DOWN"
+                self.Auras.numBuffs = config.units.target.numBuffs
+                self.Auras.numDebuffs = config.units.target.numDebuffs
+                self.Auras.onlyShowPlayer = config.units.target.onlyShowPlayer
+                self.Auras.spacing = 4.5
+                self.Auras.showStealableBuffs = true
+                self.Auras.debuffFilter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY"
+
+                self.Auras.PostUpdateGapIcon = function(self, unit, icon, visibleBuffs)
+                    icon:Hide()
+                end
             end
         end
 
-        if ( config.units.target.showThreatValue ) then
+        if ( not config.units.target.showDebuffsOnTop and config.units.target.showThreatValue ) then
             self.NumericalThreat = CreateFrame("Frame", "$parent_NumericalThreat", self)
             self.NumericalThreat:SetSize(49, 18)
             self.NumericalThreat:SetPoint("BOTTOM", self, "TOP", 0, 0)
