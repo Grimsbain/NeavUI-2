@@ -26,7 +26,9 @@ local function EnableMouseOver(self, bar, min, max, alpha, hiddenAlpha)
         end)
 
         mouseOverFrame:SetScript("OnShow", function()
-            bar:SetAlpha(minAlpha)
+            if ( not MouseIsOver(button) ) then
+                bar:SetAlpha(minAlpha)
+            end
         end)
 
         mouseOverFrame:SetScript("OnEnter", function()
@@ -37,6 +39,14 @@ local function EnableMouseOver(self, bar, min, max, alpha, hiddenAlpha)
             if ( not MouseIsOver(button) ) then
                 bar:SetAlpha(minAlpha)
             end
+        end)
+
+        button:HookScript("OnShow", function()
+            C_Timer.After(0.5, function()
+                if ( not MouseIsOver(mouseOverFrame) ) then
+                    bar:SetAlpha(minAlpha)
+                end
+            end)
         end)
 
         button:HookScript("OnEnter", function()
