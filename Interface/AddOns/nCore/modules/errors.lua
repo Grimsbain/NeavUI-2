@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:ErrorFilter()
-    if ( not nCoreDB.ErrorFilter ) then return end
+    if not nCoreDB.ErrorFilter then return end
 
     UIErrorsFrame:UnregisterEvent("UI_ERROR_MESSAGE")
     UIErrorsFrame:SetTimeVisible(1)
@@ -62,7 +62,7 @@ function nCore:ErrorFilter()
     event:RegisterEvent("UI_ERROR_MESSAGE")
 
     event:SetScript("OnEvent", function(self, event, messageType, message)
-        if ( not ignoreList[messageType] ) then
+        if not ignoreList[messageType] then
             UIErrorsFrame:AddMessage(message, 1, .1, .1)
         end
     end)

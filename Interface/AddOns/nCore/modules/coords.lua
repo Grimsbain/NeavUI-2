@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:MapCoords()
-    if ( not nCoreDB.MapCoords ) then return end
+    if not nCoreDB.MapCoords then return end
 
     local unpack = unpack
 
@@ -33,7 +33,7 @@ function nCore:MapCoords()
     end)
 
     nCore_CoordsFrame:SetScript("OnUpdate", function(self, elapsed)
-        if ( IsInInstance() ) then
+        if IsInInstance() then
             self.Mouse.Text:SetText("")
             self.Player.Text:SetText("")
             return
@@ -42,20 +42,20 @@ function nCore:MapCoords()
         local mapID = C_Map.GetBestMapForUnit("player")
         local px, py = GetPlayerMapPos(mapID)
 
-        if ( px ) then
-            if ( px ~= 0 and py ~= 0 ) then
-                self.Player.Text:SetFormattedText("Player: %.1f x %.1f", px * 100, py * 100)
+        if px then
+            if px ~= 0 and py ~= 0 then
+                self.Player.Text:SetFormattedText("%s: %.1f x %.1f", PLAYER, px * 100, py * 100)
             else
                 self.Player.Text:SetText("")
             end
         end
 
-        if ( WorldMapFrame.ScrollContainer:IsMouseOver() ) then
+        if WorldMapFrame.ScrollContainer:IsMouseOver() then
             local cx, cy = WorldMapFrame.ScrollContainer:GetNormalizedCursorPosition()
 
-            if ( cx ) then
-                if ( cx >= 0 and cy >= 0 and cx <= 1 and cy <= 1 ) then
-                    self.Mouse.Text:SetFormattedText("Cursor: %.1f x %.1f", cx * 100, cy * 100)
+            if cx then
+                if cx >= 0 and cy >= 0 and cx <= 1 and cy <= 1 then
+                    self.Mouse.Text:SetFormattedText("%s: %.1f x %.1f", MOUSE_LABEL, cx * 100, cy * 100)
                 else
                     self.Mouse.Text:SetText("")
                 end

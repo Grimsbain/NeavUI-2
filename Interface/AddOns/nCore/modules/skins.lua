@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:Skins()
-    if ( not nCoreDB.Skins ) then return end
+    if not nCoreDB.Skins then return end
 
     local f = CreateFrame("Frame")
     f:RegisterEvent("VARIABLES_LOADED")
@@ -13,7 +13,7 @@ function nCore:Skins()
             -- a example for addons like pitbull
 
         --[[
-        if ( IsAddOnLoaded("PitBull4") ) then
+        if IsAddOnLoaded("PitBull4") then
             f:SetScript("OnUpdate", function(self)
 
                     -- works fine because beautycase will not create multiple textures/borders
@@ -23,7 +23,7 @@ function nCore:Skins()
                     PitBull4_Frames_target,
                     PitBull4_Frames_targettarget,
                 }) do
-                    if ( pitframe:IsShown() ) then
+                    if pitframe:IsShown() then
                         pitframe:CreateBeautyBorder(11)
                         pitframe:SetBeautyBorderPadding(2)
                     end
@@ -32,14 +32,14 @@ function nCore:Skins()
         end
         --]]
 
-        if ( IsAddOnLoaded("Omen") ) then
-            if ( not OmenBarList.beautyBorder ) then
+        if IsAddOnLoaded("Omen") then
+            if not OmenBarList.beautyBorder then
                 OmenBarList:CreateBeautyBorder(11)
                 OmenBarList:SetBeautyBorderPadding(3)
             end
         end
 
-        if ( IsAddOnLoaded("DBM-Core") ) then
+        if IsAddOnLoaded("DBM-Core") then
             hooksecurefunc(DBT, "CreateBar", function(self)
                 for bar in self:GetBarIterator() do
                     local frame = bar.frame
@@ -77,8 +77,8 @@ function nCore:Skins()
             end)
         end
 
-        if ( IsAddOnLoaded("TinyDPS") ) then
-            if ( not tdpsFrame.beautyBorder ) then
+        if IsAddOnLoaded("TinyDPS") then
+            if not tdpsFrame.beautyBorder then
                 tdpsFrame:CreateBeautyBorder(11)
                 tdpsFrame:SetBeautyBorderPadding(2)
                 tdpsFrame:SetBackdrop({
@@ -89,8 +89,8 @@ function nCore:Skins()
             end
         end
 
-        if ( IsAddOnLoaded("Recount") ) then
-            if ( not Recount.MainWindow.beautyBorder ) then
+        if IsAddOnLoaded("Recount") then
+            if not Recount.MainWindow.beautyBorder then
                 Recount.MainWindow:CreateBeautyBorder(12)
                 Recount.MainWindow:SetBeautyBorderPadding(2, -10, 2, -10, 2, 2, 2, 2)
                 Recount.MainWindow:SetBackdrop({
@@ -101,12 +101,12 @@ function nCore:Skins()
             end
         end
 
-        if ( IsAddOnLoaded("Skada") ) then
+        if IsAddOnLoaded("Skada") then
             local OriginalSkadaFunc = Skada.PLAYER_ENTERING_WORLD
             function Skada:PLAYER_ENTERING_WORLD()
                 OriginalSkadaFunc(self)
 
-                if ( SkadaBarWindowSkada and not SkadaBarWindowSkada.beautyBorder ) then
+                if SkadaBarWindowSkada and not SkadaBarWindowSkada.beautyBorder then
                     SkadaBarWindowSkada:CreateBeautyBorder(11)
                     SkadaBarWindowSkada:SetBeautyBorderPadding(3)
                     SkadaBarWindowSkada:SetBackdrop({
@@ -120,8 +120,8 @@ function nCore:Skins()
             end
         end
 
-        if ( IsAddOnLoaded("Numeration") ) then
-            if ( not NumerationFrame.beautyBorder ) then
+        if IsAddOnLoaded("Numeration") then
+            if not NumerationFrame.beautyBorder then
                 NumerationFrame:CreateBeautyBorder(11)
                 NumerationFrame:SetBeautyBorderPadding(3)
             end

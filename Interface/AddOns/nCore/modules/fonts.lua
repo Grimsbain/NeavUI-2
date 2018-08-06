@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:Fonts()
-    if ( not nCoreDB.Fonts ) then return end
+    if not nCoreDB.Fonts then return end
 
     --[[
         -- A list of all fonts

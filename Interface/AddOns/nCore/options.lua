@@ -5,37 +5,39 @@ local floor = math.floor
 
     -- Set Defaults
 
-function nCore:RegisterDefaultSetting(key, value)
-    if ( nCoreDB == nil ) then
-        nCoreDB = {}
+function nCore:RegisterDefaultSetting(database, key, value)
+    if database == nil then
+        database = {}
     end
-    if ( nCoreDB[key] == nil ) then
-        nCoreDB[key] = value
+    if database[key] == nil then
+        database[key] = value
     end
 end
 
-	-- Set Defaults
+    -- Set Defaults
 
 function nCore:SetDefaultOptions()
-	nCore:RegisterDefaultSetting("AltBuy", true)
-    nCore:RegisterDefaultSetting("ArchaeologyHelper", true)
-    nCore:RegisterDefaultSetting("AutoGreed", true)
-    nCore:RegisterDefaultSetting("AutoQuest", true)
-    nCore:RegisterDefaultSetting("Dressroom", true)
-    nCore:RegisterDefaultSetting("Durability", true)
-    nCore:RegisterDefaultSetting("ErrorFilter", true)
-    nCore:RegisterDefaultSetting("Fonts", true)
-    nCore:RegisterDefaultSetting("ObjectiveTracker", true)
-    nCore:RegisterDefaultSetting("MapCoords", true)
-    nCore:RegisterDefaultSetting("MoveTalkingHeads", true)
-    nCore:RegisterDefaultSetting("Skins", true)
-    nCore:RegisterDefaultSetting("SpellID", true)
-    nCore:RegisterDefaultSetting("VignetteAlert", true)
+    -- Global
+    nCore:RegisterDefaultSetting(nCoreDB, "AltBuy", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "ArchaeologyHelper", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "AutoGreed", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "AutoQuest", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "Dressroom", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "Durability", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "ErrorFilter", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "Fonts", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "ObjectiveTracker", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "MapCoords", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "MoveTalkingHeads", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "QuestTracker", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "Skins", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "SpellID", true)
+    nCore:RegisterDefaultSetting(nCoreDB, "VignetteAlert", true)
 end
 
 function nCore:LockInCombat(frame)
     frame:SetScript("OnUpdate", function(self)
-        if ( not InCombatLockdown() ) then
+        if not InCombatLockdown() then
             self:Enable()
         else
             self:Disable()
@@ -44,29 +46,28 @@ function nCore:LockInCombat(frame)
 end
 
 function nCore:CreateCheckBox(name, parent, label, tooltip, relativeTo, x, y, disableInCombat)
-	local checkBox = CreateFrame("CheckButton", name, parent, "InterfaceOptionsCheckButtonTemplate")
+    local checkBox = CreateFrame("CheckButton", name, parent, "InterfaceOptionsCheckButtonTemplate")
     checkBox:SetPoint("TOPLEFT", relativeTo, "BOTTOMLEFT", x, y)
     checkBox.Text:SetText(label)
 
-	if ( tooltip ) then
-		checkBox.tooltipText = tooltip
-	end
+    if tooltip then
+        checkBox.tooltipText = tooltip
+    end
 
-	if ( disableInCombat ) then
-		nCore:LockInCombat(checkBox)
-	end
+    if disableInCombat then
+        nCore:LockInCombat(checkBox)
+    end
 
-	return checkBox
+    return checkBox
 end
 
 local Options = CreateFrame("Frame", "nCoreOptions", InterfaceOptionsFramePanelContainer)
 Options.name = GetAddOnMetadata(addon, "Title")
-Options.version = GetAddOnMetadata(addon, "Version")
 InterfaceOptions_AddCategory(Options)
 
 Options:Hide()
 Options:SetScript("OnShow", function()
-	local panelWidth = Options:GetWidth()/2
+    local panelWidth = Options:GetWidth()/2
 
     local LeftSide = CreateFrame("Frame", "LeftSide", Options)
     LeftSide:SetHeight(Options:GetHeight())
@@ -161,7 +162,14 @@ Options:SetScript("OnShow", function()
         nCoreDB.MoveTalkingHeads = checked
     end)
 
-    local Skins = nCore:CreateCheckBox("Skins", LeftSide, L.Skins, L.SkinsTooltip, MoveTalkingHeads, 0, -6, false)
+    local QuestTracker = nCore:CreateCheckBox("QuestTracker", LeftSide, L.QuestTracker, L.QuestTrackerTooltip, MoveTalkingHeads, 0, -6, false)
+    QuestTracker:SetScript("OnClick", function(self)
+        local checked = not not self:GetChecked()
+        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+        nCoreDB.QuestTracker = checked
+    end)
+
+    local Skins = nCore:CreateCheckBox("Skins", LeftSide, L.Skins, L.SkinsTooltip, QuestTracker, 0, -6, false)
     Skins:SetScript("OnClick", function(self)
         local checked = not not self:GetChecked()
         PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
@@ -186,7 +194,7 @@ Options:SetScript("OnShow", function()
 
     local AddonTitle = Options:CreateFontString("$parentTitle", "ARTWORK", "GameFontNormalLarge")
     AddonTitle:SetPoint("TOPRIGHT", -16, -16)
-    AddonTitle:SetText(Options.name.." "..Options.version)
+    AddonTitle:SetText(Options.name)
 
     local ReloadButton = CreateFrame("BUTTON", "ReloadButton", RightSide, "UIPanelButtonTemplate")
     ReloadButton:SetSize(100, 24)
@@ -208,6 +216,7 @@ Options:SetScript("OnShow", function()
         ObjectiveTracker:SetChecked(nCoreDB.ObjectiveTracker)
         MapCoords:SetChecked(nCoreDB.MapCoords)
         MoveTalkingHeads:SetChecked(nCoreDB.MoveTalkingHeads)
+        QuestTracker:SetChecked(nCoreDB.QuestTracker)
         Skins:SetChecked(nCoreDB.Skins)
         SpellID:SetChecked(nCoreDB.SpellID)
         VignetteAlert:SetChecked(nCoreDB.VignetteAlert)

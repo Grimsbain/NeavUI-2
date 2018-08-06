@@ -33,5 +33,5 @@ function nCore:CreateAnchor(name, width, height, location)
 end
 
 function nCore:IsTaintable()
-	return (InCombatLockdown() or (UnitAffectingCombat("player") or UnitAffectingCombat("pet")))
+    return (InCombatLockdown() or (UnitAffectingCombat("player") or UnitAffectingCombat("pet")))
 end

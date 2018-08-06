@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:Durability()
-    if ( not nCoreDB.Durability ) then return end
+    if not nCoreDB.Durability then return end
 
     local select = select
     local unpack = unpack
@@ -45,10 +45,10 @@ function nCore:Durability()
     _G[f:GetName().."MiddleDisabled"]:SetTexture(nil)
 
     local function ColorGradient(perc, ...)
-        if ( perc >= 1 ) then
+        if perc >= 1 then
             local r, g, b = select(select("#", ...) - 2, ...)
             return r, g, b
-        elseif ( perc < 0 ) then
+        elseif perc < 0 then
             local r, g, b = ... return r, g, b
         end
 
@@ -69,14 +69,14 @@ function nCore:Durability()
             local curr, max = GetInventoryItemDurability(slotInfo[i][1])
             local itemSlot = _G["Character"..slotInfo[i][2].."Slot"]
 
-            if ( curr and max and max ~= 0 ) then
-                if ( not itemSlot.Text ) then
+            if curr and max and max ~= 0 then
+                if not itemSlot.Text then
                     itemSlot.Text = itemSlot:CreateFontString(nil, "OVERLAY")
                     itemSlot.Text:SetFont(NumberFontNormal:GetFont(), 15, "OUTLINE")
                     itemSlot.Text:SetPoint("BOTTOM", itemSlot, 0, 1)
                 end
 
-                if ( itemSlot.Text ) then
+                if itemSlot.Text then
                     local avg = curr/max
                     local r, g, b = ColorGradient(avg, unpack(gradientColor))
 
@@ -87,15 +87,15 @@ function nCore:Durability()
                     total = total + 1
                 end
             else
-                if ( itemSlot.Text ) then
+                if itemSlot.Text then
                     itemSlot.Text:SetText("")
                 end
             end
 
             local r, g, b
-            if ( overAll/total and overAll/total < 1 ) then
+            if overAll/total and overAll/total < 1 then
                 r, g, b = ColorGradient(overAll/total, unpack(gradientColor))
-            elseif ( overAll/total <= 0 ) then
+            elseif overAll/total <= 0 then
                 r, g, b = 1, 0, 0
             else
                 r, g, b = 0, 1, 0

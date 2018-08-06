@@ -1,7 +1,7 @@
 local _, nCore = ...
 
 function nCore:ArchaeologyHelper()
-    if ( not nCoreDB.ArchaeologyHelper ) then return end
+    if not nCoreDB.ArchaeologyHelper then return end
 
     local SURVEY_SPELL_ID = 80451
     local FISHING_POLE = GetItemSubClassInfo(2, 20)
@@ -23,7 +23,7 @@ function nCore:ArchaeologyHelper()
     surveyButton:SetAttribute("action", nil)
 
     surveyButton:SetScript("PostClick", function(self, button, down)
-        if ( override_binding_on and not nCore:IsTaintable() ) then
+        if override_binding_on and not nCore:IsTaintable() then
             ClearOverrideBindings(self)
             override_binding_on = nil
         else
@@ -35,8 +35,8 @@ function nCore:ArchaeologyHelper()
     watcher:RegisterEvent("PLAYER_REGEN_ENABLED")
 
     watcher:SetScript("OnEvent", function(self, event, ...)
-        if ( event == "PLAYER_REGEN_ENABLED" ) then
-            if ( regen_clear_override ) then
+        if event == "PLAYER_REGEN_ENABLED" then
+            if regen_clear_override then
                 ClearOverrideBindings(surveyButtonName)
                 override_binding_on = nil
                 regen_clear_override = nil
@@ -45,15 +45,15 @@ function nCore:ArchaeologyHelper()
     end)
 
     WorldFrame:HookScript("OnMouseDown", function(frame, button, down)
-        if ( button ~= "RightButton" or nCore:IsTaintable() ) then return end
+        if button ~= "RightButton" or nCore:IsTaintable() then return end
 
         local mapID = C_Map.GetBestMapForUnit("player")
 
-        if ( ArchaeologyMapUpdateAll(mapID) > 0  and CanScanResearchSite() and GetSpellCooldown(SURVEY_SPELL_ID) == 0 and not IsEquippedItemType(FISHING_POLE) ) then
-            if ( GetNumLootItems() == 0 and previousClickTime ) then
+        if ArchaeologyMapUpdateAll(mapID) > 0  and CanScanResearchSite() and GetSpellCooldown(SURVEY_SPELL_ID) == 0 and not IsEquippedItemType(FISHING_POLE) then
+            if GetNumLootItems() == 0 and previousClickTime then
                 local doubleClickTime = GetTime() - previousClickTime
 
-                if ( doubleClickTime < 0.2 and doubleClickTime > 0.04 ) then
+                if doubleClickTime < 0.2 and doubleClickTime > 0.04 then
                     previousClickTime = nil
 
                     SetOverrideBindingClick(surveyButton, true, "BUTTON2", surveyButtonName)

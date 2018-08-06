@@ -1,9 +1,0 @@
-<Ui>
-	<Script file="quest.lua"/>
-	<Frame name="nQuests">
-            <Scripts>
-                <OnLoad function="nQuests_OnLoad"/>
-                <OnEvent function="nQuests_OnEvent"/>
-            </Scripts>
-	</Frame>
-</Ui>

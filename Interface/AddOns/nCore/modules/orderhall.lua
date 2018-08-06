@@ -5,10 +5,10 @@ local _, nCore = ...
     -- Toggle Display Bar
 
 local function ToggleBar(self)
-    if ( C_Garrison.IsPlayerInGarrison(LE_GARRISON_TYPE_7_0) and not self:IsVisible() ) then
+    if C_Garrison.IsPlayerInGarrison(LE_GARRISON_TYPE_7_0) and not self:IsVisible() then
         self:Show()
     else
-        if ( self:IsVisible() ) then
+        if self:IsVisible() then
             self:Hide()
         end
     end
@@ -29,8 +29,8 @@ local function SetTroops()
     local followerTotal = 0
 
     for i, follower in ipairs(followerInfo) do
-      if ( follower.isCollected ) then
-        if ( follower.isTroop ) then
+      if follower.isCollected then
+        if follower.isTroop then
             followerTotal = followerTotal + 1
         end
       end
@@ -48,8 +48,8 @@ function nOrderHall_OnLoad(self)
 end
 
 function nOrderHall_OnEvent(self, event, ...)
-    if ( event == "PLAYER_ENTERING_WORLD" ) then
-        if ( OrderHallCommandBar ) then
+    if event == "PLAYER_ENTERING_WORLD" then
+        if OrderHallCommandBar then
             OrderHallCommandBar:Hide()
             OrderHallCommandBar:UnregisterAllEvents()
             OrderHallCommandBar.Show = function() end
@@ -57,19 +57,19 @@ function nOrderHall_OnEvent(self, event, ...)
         OrderHall_CheckCommandBar = function () end
 
         ToggleBar(self)
-    elseif ( event == "GARRISON_UPDATE" ) then
+    elseif event == "GARRISON_UPDATE" then
         ToggleBar(self)
 
-        if ( self:IsVisible() ) then
+        if self:IsVisible() then
             SetCurrency()
             SetTroops()
         end
-    elseif ( event == "CURRENCY_DISPLAY_UPDATE" ) then
-        if ( self:IsVisible() ) then
+    elseif event == "CURRENCY_DISPLAY_UPDATE" then
+        if self:IsVisible() then
             SetCurrency()
         end
-    elseif ( event == "GARRISON_FOLLOWER_ADDED" or event == "GARRISON_FOLLOWER_REMOVED" ) then
-        if ( self:IsVisible() ) then
+    elseif event == "GARRISON_FOLLOWER_ADDED" or event == "GARRISON_FOLLOWER_REMOVED" then
+        if self:IsVisible() then
             SetTroops()
         end
     end
@@ -88,8 +88,8 @@ function nOrderHall_OnEnter(self)
     table.sort( followerInfo, sort_func )
 
     for i, follower in ipairs(followerInfo) do
-        if ( follower.isCollected ) then
-            if ( follower.isTroop ) then
+        if follower.isCollected then
+            if follower.isTroop then
                 GameTooltip:AddDoubleLine(follower.name, follower.durability .. "/" .. follower.maxDurability, 1,1,1, 1,1,1)
             end
         end
