@@ -1,3 +1,4 @@
+
 local _, nTooltip = ...
 local cfg = nTooltip.Config
 
@@ -26,7 +27,7 @@ local damagerIcon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:13:13:
 
     -- Some tooltip changes
 
-if ( cfg.fontOutline ) then
+if cfg.fontOutline then
     GameTooltipHeaderText:SetFont(STANDARD_TEXT_FONT, (cfg.fontSize + 2), "OUTLINE")
     GameTooltipHeaderText:SetShadowOffset(0, 0)
 
@@ -47,23 +48,23 @@ GameTooltipStatusBar:SetBackdropColor(0, 1, 0, 0.3)
 
 local function ApplyTooltipStyle(self)
     local bgsize, bsize
-    if ( self == ConsolidatedBuffsTooltip ) then
+    if self == ConsolidatedBuffsTooltip then
         bgsize = 1
         bsize = 8
-    elseif ( self == FriendsTooltip ) then
+    elseif self == FriendsTooltip then
         FriendsTooltip:SetScale(1.1)
 
-        bgsize = 1
-        bsize = 9
-	elseif ( self == FloatingBattlePetTooltip or self == BattlePetTooltip ) then
-		bgsize = 4
+        bgsize = 4
+        bsize = 16
+    elseif self == FloatingBattlePetTooltip or self == BattlePetTooltip then
+        bgsize = 4
         bsize = 16
     else
         bgsize = 3
         bsize = 12
     end
 
-    if ( not self.Background ) then
+    if not self.Background then
         self.Background = self:CreateTexture(nil, "BACKGROUND", nil, 1)
         self.Background:SetTexture("Interface\\Buttons\\WHITE8x8")
         self.Background:SetPoint("TOPLEFT", self, bgsize, -bgsize)
@@ -71,8 +72,8 @@ local function ApplyTooltipStyle(self)
         self.Background:SetVertexColor(0.0, 0.0, 0.0, 0.60)
     end
 
-    if ( beautyBorderLoaded ) then
-        if ( not self:HasBeautyBorder() ) then
+    if beautyBorderLoaded then
+        if not self:HasBeautyBorder() then
             self:CreateBeautyBorder(bsize)
         end
     end
@@ -81,7 +82,7 @@ end
 for _, tooltip in pairs({
     GameTooltip,
     BattlePetTooltip,
-	EmbeddedItemTooltip,
+    EmbeddedItemTooltip,
     ItemRefTooltip,
     ItemRefShoppingTooltip1,
     ItemRefShoppingTooltip2,
@@ -115,7 +116,7 @@ end
 
     -- Itemquaility border, we use our beautycase functions
 
-if ( cfg.itemqualityBorderColor ) then
+if cfg.itemqualityBorderColor then
     for _, tooltip in pairs({
         GameTooltip,
         ItemRefTooltip,
@@ -124,12 +125,12 @@ if ( cfg.itemqualityBorderColor ) then
         ShoppingTooltip2,
         ShoppingTooltip3,
     }) do
-        if ( tooltip.beautyBorder ) then
+        if tooltip.beautyBorder then
             tooltip:HookScript("OnTooltipSetItem", function(self)
                 local name, item = self:GetItem()
-                if ( item ) then
+                if item then
                     local quality = select(3, GetItemInfo(item))
-                    if ( quality ) then
+                    if quality then
                         local r, g, b = GetItemQualityColor(quality)
                         self:SetBeautyBorderTexture("white")
                         self:SetBeautyBorderColor(r, g, b)
@@ -147,7 +148,7 @@ end
 
 local function GetFormattedUnitType(unit)
     local creaturetype = UnitCreatureType(unit)
-    if ( creaturetype ) then
+    if creaturetype then
         return creaturetype
     else
         return ""
@@ -156,13 +157,13 @@ end
 
 local function GetFormattedUnitClassification(unit)
     local class = UnitClassification(unit)
-    if ( class == "worldboss" ) then
+    if class == "worldboss" then
         return "|cffFF0000"..BOSS.."|r "
-    elseif ( class == "rareelite" ) then
+    elseif class == "rareelite" then
         return "|cffFF66CCRare|r |cffFFFF00"..ELITE.."|r "
-    elseif ( class == "rare" ) then
+    elseif class == "rare" then
         return "|cffFF66CCRare|r "
-    elseif ( class == "elite" ) then
+    elseif class == "elite" then
         return "|cffFFFF00"..ELITE.."|r "
     else
         return ""
@@ -171,9 +172,9 @@ end
 
 local function GetFormattedUnitLevel(unit)
     local diff = GetQuestDifficultyColor(UnitLevel(unit))
-    if ( UnitLevel(unit) == -1 ) then
+    if UnitLevel(unit) == -1 then
         return "|cffff0000??|r "
-    elseif ( UnitLevel(unit) == 0 ) then
+    elseif UnitLevel(unit) == 0 then
         return "? "
     else
         return format("|cff%02x%02x%02x%s|r ", diff.r*255, diff.g*255, diff.b*255, UnitLevel(unit))
@@ -182,14 +183,14 @@ end
 
 local function GetFormattedUnitClass(unit)
     local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    if ( color ) then
+    if color then
         return format(" |cff%02x%02x%02x%s|r", color.r*255, color.g*255, color.b*255, UnitClass(unit))
     end
 end
 
 local function GetFormattedUnitString(unit, specIcon)
-    if ( UnitIsPlayer(unit) ) then
-        if ( not UnitRace(unit) ) then
+    if UnitIsPlayer(unit) then
+        if not UnitRace(unit) then
             return nil
         end
         return GetFormattedUnitLevel(unit)..UnitRace(unit)..GetFormattedUnitClass(unit)..(cfg.showSpecializationIcon and specIcon or "")
@@ -202,11 +203,11 @@ local function GetUnitRoleString(unit)
     local role = UnitGroupRolesAssigned(unit)
     local roleList = nil
 
-    if ( role == "TANK" ) then
+    if role == "TANK" then
         roleList = "   "..tankIcon.." "..TANK
-    elseif ( role == "HEALER" ) then
+    elseif role == "HEALER" then
         roleList = "   "..healIcon.." "..HEALER
-    elseif ( role == "DAMAGER" ) then
+    elseif role == "DAMAGER" then
         roleList = "   "..damagerIcon.." "..DAMAGER
     end
 
@@ -217,9 +218,9 @@ end
 
 local function SetHealthBarColor(unit)
     local r, g, b
-    if ( cfg.healthbar.customColor.apply and not cfg.healthbar.reactionColoring ) then
+    if cfg.healthbar.customColor.apply and not cfg.healthbar.reactionColoring then
         r, g, b = cfg.healthbar.customColor.r, cfg.healthbar.customColor.g, cfg.healthbar.customColor.b
-    elseif ( cfg.healthbar.reactionColoring and unit ) then
+    elseif cfg.healthbar.reactionColoring and unit then
         r, g, b = UnitSelectionColor(unit)
     else
         r, g, b = 0, 1, 0
@@ -233,8 +234,8 @@ local function GetUnitRaidIcon(unit)
     local index = GetRaidTargetIndex(unit)
     local icon = ICON_LIST[index] or ""
 
-    if ( index ) then
-        if ( UnitIsPVP(unit) and cfg.showPVPIcons ) then
+    if index then
+        if UnitIsPVP(unit) and cfg.showPVPIcons then
             return icon.."11|t"
         else
             return icon.."11|t "
@@ -247,14 +248,14 @@ end
 local function GetUnitPVPIcon(unit)
     local factionGroup = UnitFactionGroup(unit)
 
-    if ( UnitIsPVPFreeForAll(unit) ) then
-        if ( cfg.showPVPIcons ) then
+    if UnitIsPVPFreeForAll(unit) then
+        if cfg.showPVPIcons then
             return CreateTextureMarkup("Interface\\AddOns\\nTooltip\\media\\UI-PVP-FFA", 32,32, 16,16, 0,1,0,1, -2,-1)
         else
             return "|cffFF0000# |r"
         end
-    elseif ( factionGroup and UnitIsPVP(unit) ) then
-        if ( cfg.showPVPIcons ) then
+    elseif factionGroup and UnitIsPVP(unit) then
+        if cfg.showPVPIcons then
             return CreateTextureMarkup("Interface\\AddOns\\nTooltip\\media\\UI-PVP-"..factionGroup, 32,32, 14,14, 0,1,0,1, -2,-1)
         else
             return "|cff00FF00# |r"
@@ -273,11 +274,11 @@ local function AddMouseoverTarget(self, unit)
         b = select(3, GameTooltip_UnitColor(unit.."target"))
     }
 
-    if ( UnitExists(unit.."target") ) then
-        if ( UnitName("player") == unitTargetName ) then
+    if UnitExists(unit.."target") then
+        if UnitName("player") == unitTargetName then
             self:AddLine(format("   "..GetUnitRaidIcon(unit.."target").."|cffff00ff%s|r", upper(YOU)), 1, 1, 1)
         else
-            if ( UnitIsPlayer(unit.."target") ) then
+            if UnitIsPlayer(unit.."target") then
                 self:AddLine(format("   "..GetUnitRaidIcon(unit.."target").."|cff%02x%02x%02x%s|r", unitTargetClassColor.r*255, unitTargetClassColor.g*255, unitTargetClassColor.b*255, unitTargetName:sub(1, 40)), 1, 1, 1)
             else
                 self:AddLine(format("   "..GetUnitRaidIcon(unit.."target").."|cff%02x%02x%02x%s|r", unitTargetReactionColor.r*255, unitTargetReactionColor.g*255, unitTargetReactionColor.b*255, unitTargetName:sub(1, 40)), 1, 1, 1)
@@ -289,19 +290,19 @@ end
 GameTooltip.inspectCache = {}
 
 GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
-	local _, unit = self:GetUnit()
+    local _, unit = self:GetUnit()
 
-    if ( cfg.hideInCombat and InCombatLockdown() ) then
+    if cfg.hideInCombat and InCombatLockdown() then
         self:Hide()
         return
     end
 
-    if ( UnitExists(unit) and UnitName(unit) ~= UNKNOWN ) then
+    if UnitExists(unit) and UnitName(unit) ~= UNKNOWN then
         local specIcon = ""
         local lastUpdate = 30
         for index, _ in pairs(self.inspectCache) do
             local inspectCache = self.inspectCache[index]
-            if ( inspectCache.GUID == UnitGUID(unit) ) then
+            if inspectCache.GUID == UnitGUID(unit) then
                 specIcon = inspectCache.specIcon or ""
                 lastUpdate = inspectCache.lastUpdate and math.abs(inspectCache.lastUpdate - floor(GetTime())) or 30
             end
@@ -309,9 +310,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Fetch Inspect Information
 
-        if ( unit and CanInspect(unit) ) then
-            if ( not self.inspectRefresh and lastUpdate >= 30 and not self.blockInspectRequests ) then
-                if ( not self.blockInspectRequests ) then
+        if unit and CanInspect(unit) then
+            if not self.inspectRefresh and lastUpdate >= 30 and not self.blockInspectRequests then
+                if not self.blockInspectRequests then
                     self.inspectRequestSent = true
                     NotifyInspect(unit)
                 end
@@ -324,8 +325,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Player Titles
 
-        if ( cfg.showPlayerTitles ) then
-            if ( UnitPVPName(unit) ) then
+        if cfg.showPlayerTitles then
+            if UnitPVPName(unit) then
                 name = UnitPVPName(unit)
             end
         end
@@ -334,8 +335,8 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Color guildnames
 
-        if ( GetGuildInfo(unit) ) then
-            if ( GetGuildInfo(unit) == GetGuildInfo("player") and IsInGuild("player") ) then
+        if GetGuildInfo(unit) then
+            if GetGuildInfo(unit) == GetGuildInfo("player") and IsInGuild("player") then
                GameTooltipTextLeft2:SetText("|cffFF66CC"..GameTooltipTextLeft2:GetText().."|r")
             end
         end
@@ -343,27 +344,27 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
             -- Level
 
         for i = 2, GameTooltip:NumLines() do
-            if ( _G["GameTooltipTextLeft"..i]:GetText():find("^"..TOOLTIP_UNIT_LEVEL:gsub("%%s", ".+")) ) then
+            if _G["GameTooltipTextLeft"..i]:GetText():find("^"..TOOLTIP_UNIT_LEVEL:gsub("%%s", ".+")) then
                 _G["GameTooltipTextLeft"..i]:SetText(GetFormattedUnitString(unit, specIcon))
             end
         end
 
             -- Role
 
-        if ( cfg.showUnitRole ) then
+        if cfg.showUnitRole then
             self:AddLine(GetUnitRoleString(unit), 1, 1, 1)
         end
 
             -- Mouseover Target
 
-        if ( cfg.showMouseoverTarget ) then
+        if cfg.showMouseoverTarget then
             AddMouseoverTarget(self, unit)
         end
 
             -- PvP Flag Prefix
 
         for i = 3, GameTooltip:NumLines() do
-            if ( _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) ) then
+            if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
                 _G["GameTooltipTextLeft"..i]:SetText(nil)
                 GameTooltipTextLeft1:SetText(GetUnitPVPIcon(unit)..GameTooltipTextLeft1:GetText())
             end
@@ -375,16 +376,16 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Away and DND
 
-        if ( UnitIsAFK(unit) ) then
+        if UnitIsAFK(unit) then
             self:AppendText("|cff00ff00 <"..CHAT_MSG_AFK..">|r")
-        elseif ( UnitIsDND(unit) ) then
+        elseif UnitIsDND(unit) then
             self:AppendText("|cff00ff00 <"..DEFAULT_DND_MESSAGE..">|r")
         end
 
             -- Player realm names
 
-        if ( realm and realm ~= "" ) then
-            if ( cfg.abbrevRealmNames)   then
+        if realm and realm ~= "" then
+            if cfg.abbrevRealmNames then
                 self:AppendText(" (*)")
             else
                 self:AppendText(" - "..realm)
@@ -393,7 +394,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Move the healthbar inside the tooltip
 
-        if ( GameTooltipStatusBar:IsShown() ) then
+        if GameTooltipStatusBar:IsShown() then
             self:AddLine(" ")
             GameTooltipStatusBar:ClearAllPoints()
             GameTooltipStatusBar:SetPoint("LEFT", self:GetName().."TextLeft"..self:NumLines(), 1, -3)
@@ -402,7 +403,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Border coloring
 
-        if ( cfg.reactionBorderColor and self.beautyBorder ) then
+        if cfg.reactionBorderColor and self.beautyBorder then
             local r, g, b = UnitSelectionColor(unit)
 
             self:SetBeautyBorderTexture("white")
@@ -411,10 +412,10 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
 
             -- Dead or ghost recoloring
 
-        if ( UnitIsDead(unit) or UnitIsGhost(unit) ) then
+        if UnitIsDead(unit) or UnitIsGhost(unit) then
             GameTooltipStatusBar:SetBackdropColor(0.5, 0.5, 0.5, 0.3)
         else
-            if ( not cfg.healthbar.customColor.apply and not cfg.healthbar.reactionColoring ) then
+            if not cfg.healthbar.customColor.apply and not cfg.healthbar.reactionColoring then
                 GameTooltipStatusBar:SetBackdropColor(27/255, 243/255, 27/255, 0.3)
             else
                 SetHealthBarColor(unit)
@@ -423,41 +424,41 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self, ...)
     end
 end)
 
--- GameTooltip:HookScript("OnTooltipCleared", function(self)
-    -- GameTooltipStatusBar:ClearAllPoints()
-    -- GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0.5, 3)
-    -- GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -1, 3)
-    -- GameTooltipStatusBar:SetBackdropColor(0, 1, 0, 0.3)
+GameTooltip:HookScript("OnTooltipCleared", function(self)
+    GameTooltipStatusBar:ClearAllPoints()
+    GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0.5, 3)
+    GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -1, 3)
+    GameTooltipStatusBar:SetBackdropColor(0, 1, 0, 0.3)
 
-    -- if ( cfg.reactionBorderColor and self.beautyBorder ) then
-        -- self:SetBeautyBorderTexture("default")
-        -- self:SetBeautyBorderColor(1, 1, 1)
-    -- end
--- end)
+    if (cfg.reactionBorderColor and self.beautyBorder) then
+        self:SetBeautyBorderTexture("default")
+        self:SetBeautyBorderColor(1, 1, 1)
+    end
+end)
 
     -- Custom healthbar coloring
 
-if ( cfg.healthbar.reactionColoring or cfg.healthbar.customColor.apply ) then
+if cfg.healthbar.reactionColoring or cfg.healthbar.customColor.apply then
     GameTooltipStatusBar:HookScript("OnValueChanged", function(self)
-		local _, unit = self:GetParent():GetUnit()
+        local _, unit = self:GetParent():GetUnit()
         SetHealthBarColor(unit)
     end)
 end
 
     -- Hide coalesced/interactive realm information
 
-if ( cfg.hideRealmText ) then
+if cfg.hideRealmText then
     local COALESCED_REALM_TOOLTIP1 = string.split(FOREIGN_SERVER_LABEL, COALESCED_REALM_TOOLTIP)
     local INTERACTIVE_REALM_TOOLTIP1 = string.split(INTERACTIVE_SERVER_LABEL, INTERACTIVE_REALM_TOOLTIP)
-    -- Dirty checking of the coalesced realm text because it"s added
+    -- Dirty checking of the coalesced realm text because it's added
     -- after the initial OnShow
     GameTooltip:HookScript("OnUpdate", function(self)
         for i = 3, self:NumLines() do
             local row = _G["GameTooltipTextLeft"..i]
             local rowText = row:GetText()
 
-            if ( rowText ) then
-                if ( rowText:find(COALESCED_REALM_TOOLTIP1) or rowText:find(INTERACTIVE_REALM_TOOLTIP1) ) then
+            if rowText then
+                if rowText:find(COALESCED_REALM_TOOLTIP1) or rowText:find(INTERACTIVE_REALM_TOOLTIP1) then
                     row:SetText(nil)
                     row:Hide()
 
@@ -505,7 +506,7 @@ end
 local nTooltipAnchor = CreateAnchor()
 
 hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
-    if ( cfg.showOnMouseover ) then
+    if cfg.showOnMouseover then
         self:SetOwner(parent, "ANCHOR_CURSOR")
     else
         self:SetOwner(parent, "ANCHOR_NONE")
@@ -516,22 +517,22 @@ end)
 
 GameTooltip:RegisterEvent("INSPECT_READY")
 GameTooltip:SetScript("OnEvent", function(self, event, GUID)
-    if ( not self:IsShown() ) then
+    if not self:IsShown() then
         return
     end
 
     local _, unit = self:GetUnit()
 
-    if ( not unit ) then
+    if not unit then
         return
     end
 
-    if ( self.blockInspectRequests ) then
+    if self.blockInspectRequests then
         self.inspectRequestSent = false
     end
 
-    if ( UnitGUID(unit) ~= GUID or not self.inspectRequestSent ) then
-        if ( not self.blockInspectRequests ) then
+    if UnitGUID(unit) ~= GUID or not self.inspectRequestSent then
+        if not self.blockInspectRequests then
             ClearInspectPlayer()
         end
         return
@@ -540,12 +541,12 @@ GameTooltip:SetScript("OnEvent", function(self, event, GUID)
     local _, _, _, icon = GetSpecializationInfoByID(GetInspectSpecialization(unit))
     local now = GetTime()
 
-    local iconMarkup = CreateTextureMarkup(icon, 64,64, 13,13, 0.10,.90,0.10,0.90, 0,0)
+    local iconMarkup = CreateTextureMarkup(icon, 64,64, 12,12, 0.10,.90,0.10,0.90, 0,0)
 
     local matchFound
     for index, _ in pairs(self.inspectCache) do
         local inspectCache = self.inspectCache[index]
-        if ( inspectCache.GUID == GUID ) then
+        if inspectCache.GUID == GUID then
             inspectCache.specIcon = icon and " "..iconMarkup or ""
             inspectCache.lastUpdate = floor(now)
             matchFound = true
@@ -561,14 +562,14 @@ GameTooltip:SetScript("OnEvent", function(self, event, GUID)
         table.insert(self.inspectCache, GUIDInfo)
     end
 
-    if ( #self.inspectCache > 30 ) then
+    if #self.inspectCache > 30 then
         table.remove(self.inspectCache, 1)
     end
 
     self.inspectRefresh = true
     GameTooltip:SetUnit("mouseover")
 
-    if ( not self.blockInspectRequests ) then
+    if not self.blockInspectRequests then
         ClearInspectPlayer()
     end
     self.inspectRequestSent = false
@@ -577,7 +578,7 @@ end)
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event)
-    if ( IsAddOnLoaded("Blizzard_InspectUI") ) then
+    if IsAddOnLoaded("Blizzard_InspectUI") then
         hooksecurefunc("InspectFrame_Show", function(unit)
             GameTooltip.blockInspectRequests = true
         end)
@@ -591,11 +592,11 @@ f:SetScript("OnEvent", function(self, event)
 end)
 
 SlashCmdList["nTooltip_AnchorToggle"] = function()
-    if ( InCombatLockdown() ) then
+    if InCombatLockdown() then
         print("nTooltip: You cant do this in combat!")
         return
     end
-    if ( not nTooltipAnchor:IsShown() ) then
+    if not nTooltipAnchor:IsShown() then
         nTooltipAnchor:Show()
     else
         nTooltipAnchor:Hide()

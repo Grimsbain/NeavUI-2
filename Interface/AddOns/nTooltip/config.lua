@@ -1,3 +1,4 @@
+
 local _, nTooltip = ...
 
 nTooltip.Config = {
@@ -18,7 +19,7 @@ nTooltip.Config = {
     hideRealmText = false,                      -- Hide the coalesced/interactive realm text
     showPlayerTitles = false,
     showUnitRole = true,
-    showPVPIcons = false,                       -- Show pvp icons instead of just a prefix
+    showPVPIcons = true,                       -- Show pvp icons instead of just a prefix
     showMouseoverTarget = true,
     showSpecializationIcon = true,
 

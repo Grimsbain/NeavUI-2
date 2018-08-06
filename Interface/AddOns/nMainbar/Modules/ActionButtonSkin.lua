@@ -1,112 +1,125 @@
 local _, nMainbar = ...
 local cfg = nMainbar.Config
 
-local pairs, unpack = pairs, unpack
-local path = "Interface\\AddOns\\nMainbar\\Media\\"
+local pairs = pairs
+local unpack = unpack
+
+local MEDIA_PATH = "Interface\\AddOns\\nMainbar\\Media\\"
 
 local function IsSpecificButton(self, name)
     local sbut = self:GetName():match(name)
-    if ( sbut ) then
+    if sbut then
         return true
     else
         return false
     end
 end
 
-hooksecurefunc("PetActionBar_Update", function(self)
-	local petActionButton, petActionIcon
-	for i=1, NUM_PET_ACTION_SLOTS, 1 do
-        local buttonName = "PetActionButton" .. i
-		petActionButton = _G[buttonName]
-		petActionIcon = _G[buttonName.."Icon"]
+local function SkinButton(button, icon)
+    local buttonName = button:GetName()
 
-        local name, subtext, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(i)
+    if not InCombatLockdown() then
+        local cooldown = _G[buttonName.."Cooldown"]
+        if cooldown then
+            cooldown:ClearAllPoints()
+            cooldown:SetPoint("TOPRIGHT", button, -2, -2)
+            cooldown:SetPoint("BOTTOMLEFT", button, 1, 1)
+        end
+    end
 
-        if ( texture ) then
-            petActionIcon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
-			petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
-		else
-			petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
+    button:SetNormalTexture(MEDIA_PATH.."textureNormal")
+
+    if not button.Shadow then
+        icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+        icon:SetPoint("TOPRIGHT", button, 1, 1)
+        icon:SetPoint("BOTTOMLEFT", button, -1, -1)
+
+        local normal = _G[buttonName.."NormalTexture2"] or _G[buttonName.."NormalTexture"]
+        normal:ClearAllPoints()
+        normal:SetPoint("TOPRIGHT", button, 1.5, 1.5)
+        normal:SetPoint("BOTTOMLEFT", button, -1.5, -1.5)
+        normal:SetVertexColor(unpack(cfg.color.Normal))
+
+        local flash = _G[buttonName.."Flash"]
+        if flash then
+            flash:SetTexture(flashtex)
         end
 
-        local hotkey = _G[buttonName.."HotKey"]
+        button:SetCheckedTexture(MEDIA_PATH.."textureChecked")
+        button:GetCheckedTexture():SetAllPoints(normal)
 
-        if ( hotkey ) then
-			if ( cfg.button.showKeybinds ) then
-				hotkey:ClearAllPoints()
-				hotkey:SetPoint("TOPRIGHT", buttonName, 0, -3)
-				hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.petHotKeyFontsize, "OUTLINE")
-				hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
-			else
-				hotkey:Hide()
-			end
+        button:SetPushedTexture(MEDIA_PATH.."texturePushed")
+        button:GetPushedTexture():SetAllPoints(normal)
+
+        button:SetHighlightTexture(MEDIA_PATH.."textureHighlight")
+        button:GetHighlightTexture():SetAllPoints(normal)
+
+        button.Shadow = button:CreateTexture(nil, "BACKGROUND")
+        button.Shadow:SetParent(button)
+        button.Shadow:SetPoint("TOPRIGHT", normal, 4, 4)
+        button.Shadow:SetPoint("BOTTOMLEFT", normal, -4, -4)
+        button.Shadow:SetTexture(MEDIA_PATH.."textureShadow")
+        button.Shadow:SetVertexColor(0, 0, 0, 1)
+    end
+end
+
+hooksecurefunc("PetActionBar_Update", function(self)
+    local button, icon
+    for i=1, NUM_PET_ACTION_SLOTS, 1 do
+        local buttonName = "PetActionButton"..i
+        button = _G[buttonName]
+        icon = _G[buttonName.."Icon"]
+
+        SkinButton(button, icon)
+
+        local hotkey = _G[buttonName.."HotKey"]
+        if hotkey then
+            if cfg.button.showKeybinds then
+                hotkey:ClearAllPoints()
+                hotkey:SetPoint("TOPRIGHT", buttonName, 0, -3)
+                hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.petHotKeyFontsize, "OUTLINE")
+                hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
+            else
+                hotkey:Hide()
+            end
         end
     end
 end)
 securecall("PetActionBar_Update")
 
-hooksecurefunc("PossessBar_UpdateState", function()
-	local button, icon
+hooksecurefunc("StanceBar_UpdateState", function(self)
+    local button, icon, buttonName;
+    for i=1, NUM_STANCE_SLOTS do
+        button = StanceBarFrame.StanceButtons[i]
+        icon = button.icon
 
-	for i=1, NUM_POSSESS_SLOTS do
-		button = _G["PossessButton"..i]
-		icon = _G["PossessButton"..i.."Icon"]
-
-        if ( not button.iconUpdated ) then
-            icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
-
-            button:SetCheckedTexture(path.."textureChecked")
-            button:GetCheckedTexture():SetAllPoints(icon)
-
-            button:SetPushedTexture(path.."texturePushed")
-            button:GetPushedTexture():SetAllPoints(icon)
-
-            button:SetHighlightTexture(path.."textureHighlight")
-            button:GetHighlightTexture():SetAllPoints(icon)
-
-            button.iconUpdated = true
-        end
-	end
+        SkinButton(button, icon)
+    end
 end)
 
-local stancesUpdated = false
-local oldNumForms = 0
+hooksecurefunc("PossessBar_UpdateState", function()
+    local button, icon
 
-hooksecurefunc("StanceBar_UpdateState", function()
-	local numForms = GetNumShapeshiftForms()
-    if ( stancesUpdated and numForms == oldNumForms ) then return end
+    for i=1, NUM_POSSESS_SLOTS do
+        button = _G["PossessButton"..i]
+        icon = _G["PossessButton"..i.."Icon"]
 
-	local button, icon
-	for i=1, NUM_STANCE_SLOTS do
-		button = StanceBarFrame.StanceButtons[i]
-		icon = button.icon
-		if ( i <= numForms ) then
-            button:SetCheckedTexture(path.."textureChecked")
-            button:GetCheckedTexture():SetAllPoints(button.icon)
-
-            button:SetPushedTexture(path.."texturePushed")
-            button:GetPushedTexture():SetAllPoints(button.icon)
-
-            button:SetHighlightTexture(path.."textureHighlight")
-            button:GetHighlightTexture():SetAllPoints(button.icon)
-		end
-	end
-    stancesUpdated = true
-    oldNumForms = numForms
+        SkinButton(button, icon)
+    end
 end)
 
 local function UpdateVehicleButton()
     for i = 1, NUM_OVERRIDE_BUTTONS do
         local button = _G["OverrideActionBarButton"..i]
         local hotkey = _G["OverrideActionBarButton"..i.."HotKey"]
-		if ( cfg.button.showVehicleKeybinds ) then
-			hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.hotkeyFontsize + 3, "OUTLINE")
-			hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
-			hotkey:ClearAllPoints()
-			hotkey:SetPoint("TOPRIGHT", button, -4, -8)
-		else
-			hotkey:Hide()
-		end
+        if cfg.button.showVehicleKeybinds then
+            hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.hotkeyFontsize + 3, "OUTLINE")
+            hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
+            hotkey:ClearAllPoints()
+            hotkey:SetPoint("TOPRIGHT", button, -4, -8)
+        else
+            hotkey:Hide()
+        end
     end
 end
 
@@ -145,16 +158,16 @@ hooksecurefunc("ActionButton_UpdateHotkeys", function(self, actionButtonType)
 
     hotkey:SetText(text)
 
-    if ( not IsSpecificButton(self, "OverrideActionBarButton") and not self.hotkeyUpdated ) then
-		if ( cfg.button.showKeybinds ) then
-			hotkey:ClearAllPoints()
-			hotkey:SetPoint("TOPRIGHT", self, 0, -3)
-			hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.hotkeyFontsize, "OUTLINE")
-			hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
-			self.hotkeyUpdated = true
-		else
-			hotkey:Hide()
-		end
+    if not IsSpecificButton(self, "OverrideActionBarButton") and not self.hotkeyUpdated then
+        if cfg.button.showKeybinds then
+            hotkey:ClearAllPoints()
+            hotkey:SetPoint("TOPRIGHT", self, 0, -3)
+            hotkey:SetFont(cfg.button.hotkeyFont, cfg.button.hotkeyFontsize, "OUTLINE")
+            hotkey:SetVertexColor(unpack(cfg.color.HotKeyText))
+            self.hotkeyUpdated = true
+        else
+            hotkey:Hide()
+        end
     else
         UpdateVehicleButton()
     end
@@ -162,17 +175,17 @@ end)
 
 hooksecurefunc("ActionButton_Update", function(self)
     local action = self.action
-	local icon = self.icon
+    local icon = self.icon
     local buttonCooldown = self.cooldown
-	local texture = GetActionTexture(action)
+    local texture = GetActionTexture(action)
 
-    if ( texture ) then
+    if texture then
         icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
     end
 
     local actionName = self.Name
-	if ( actionName ) then
-        if ( not cfg.button.showMacroNames ) then
+    if actionName then
+        if not cfg.button.showMacroNames then
             actionName:SetText("")
         else
             actionName:SetFont(cfg.button.macronameFont, cfg.button.macronameFontsize, "OUTLINE")
@@ -180,45 +193,45 @@ hooksecurefunc("ActionButton_Update", function(self)
         end
     end
 
-    if ( not IsSpecificButton(self, "ExtraActionButton") ) then
+    if not IsSpecificButton(self, "ExtraActionButton") then
         local button = self
 
-        if ( not button.Background ) then
+        if not button.Background then
 
             local normalTexture = self.NormalTexture
 
-            if ( normalTexture ) then
+            if normalTexture then
                 normalTexture:ClearAllPoints()
                 normalTexture:SetPoint("TOPRIGHT", button, 1, 1)
                 normalTexture:SetPoint("BOTTOMLEFT", button, -1, -1)
                 normalTexture:SetVertexColor(unpack(cfg.color.Normal))
             end
 
-            button:SetNormalTexture(path.."textureNormal")
+            button:SetNormalTexture(MEDIA_PATH.."textureNormal")
 
-            button:SetCheckedTexture(path.."textureChecked")
+            button:SetCheckedTexture(MEDIA_PATH.."textureChecked")
             button:GetCheckedTexture():SetAllPoints(normalTexture)
 
-            button:SetPushedTexture(path.."texturePushed")
+            button:SetPushedTexture(MEDIA_PATH.."texturePushed")
             button:GetPushedTexture():SetAllPoints(normalTexture)
 
-            button:SetHighlightTexture(path.."textureHighlight")
+            button:SetHighlightTexture(MEDIA_PATH.."textureHighlight")
             button:GetHighlightTexture():SetAllPoints(normalTexture)
 
             button.Background = button:CreateTexture(nil, "BACKGROUND", nil, -8)
-            button.Background:SetTexture(path.."textureBackground")
+            button.Background:SetTexture(MEDIA_PATH.."textureBackground")
             button.Background:SetPoint("TOPRIGHT", button, 14, 12)
             button.Background:SetPoint("BOTTOMLEFT", button, -14, -16)
 
-            if ( not nMainbar:IsTaintable() ) then
+            if not nMainbar:IsTaintable() then
                 buttonCooldown:ClearAllPoints()
                 buttonCooldown:SetPoint("TOPRIGHT", button, -2, -2.5)
                 buttonCooldown:SetPoint("BOTTOMLEFT", button, 2, 2)
             end
 
             local border = self.Border
-            if ( border ) then
-                if ( IsEquippedAction(action) ) then
+            if border then
+                if IsEquippedAction(action) then
                     border:SetVertexColor(unpack(cfg.color.IsEquipped))
                     border:SetAlpha(1)
                 else
@@ -227,11 +240,11 @@ hooksecurefunc("ActionButton_Update", function(self)
             end
 
             local floatingBG = _G[self:GetName().."FloatingBG"]
-            if ( floatingBG ) then
+            if floatingBG then
                 floatingBG:ClearAllPoints()
                 floatingBG:SetPoint("TOPRIGHT", button, 5, 5)
                 floatingBG:SetPoint("BOTTOMLEFT", button, -5, -5)
-                floatingBG:SetTexture(path.."textureShadow")
+                floatingBG:SetTexture(MEDIA_PATH.."textureShadow")
                 floatingBG:SetVertexColor(0, 0, 0, 1)
             end
         end
@@ -240,7 +253,7 @@ end)
 
 hooksecurefunc("ExtraActionBar_Update", function(self)
     local bar = ExtraActionBarFrame
-    if ( HasExtraActionBar() and not bar.Skinned ) then
+    if HasExtraActionBar() and not bar.Skinned then
         bar.button.style:Hide()
 
         local normalTexture = bar.button.NormalTexture
@@ -248,15 +261,15 @@ hooksecurefunc("ExtraActionBar_Update", function(self)
         normalTexture:SetPoint("TOPRIGHT", bar.button, 4, 4)
         normalTexture:SetPoint("BOTTOMLEFT", bar.button, -4, -4)
 
-        bar.button:SetNormalTexture(path.."textureNormal")
+        bar.button:SetNormalTexture(MEDIA_PATH.."textureNormal")
 
-        bar.button:SetCheckedTexture(path.."textureChecked")
+        bar.button:SetCheckedTexture(MEDIA_PATH.."textureChecked")
         bar.button:GetCheckedTexture():SetAllPoints(normalTexture)
 
-        bar.button:SetPushedTexture(path.."texturePushed")
+        bar.button:SetPushedTexture(MEDIA_PATH.."texturePushed")
         bar.button:GetPushedTexture():SetAllPoints(normalTexture)
 
-        bar.button:SetHighlightTexture(path.."textureHighlight")
+        bar.button:SetHighlightTexture(MEDIA_PATH.."textureHighlight")
         bar.button:GetHighlightTexture():SetAllPoints(normalTexture)
 
         bar.Skinned = true
@@ -264,9 +277,9 @@ hooksecurefunc("ExtraActionBar_Update", function(self)
 end)
 
 hooksecurefunc("ActionButton_UpdateCount", function(self)
-	local text = self.Count
+    local text = self.Count
 
-    if ( text ) then
+    if text then
         text:SetPoint("BOTTOMRIGHT", self, 0, 1)
         text:SetFont(cfg.button.countFont, cfg.button.countFontsize, "OUTLINE")
         text:SetVertexColor(unpack(cfg.color.CountText))
@@ -274,20 +287,40 @@ hooksecurefunc("ActionButton_UpdateCount", function(self)
 end)
 
 hooksecurefunc("ActionButton_ShowGrid", function(self)
-    if ( self.NormalTexture ) then
+    if self.NormalTexture then
         self.NormalTexture:SetVertexColor(unpack(cfg.color.Normal))
     end
 end)
 
-    -- Hide Possess Frame Background
+hooksecurefunc("ActionButton_UpdateUsable", function(self)
+    if IsAddOnLoaded("tullaRange") then
+        return
+    end
+
+    local normal = _G[self:GetName().."NormalTexture"]
+    if normal then
+        normal:SetVertexColor(unpack(cfg.color.Normal))
+    end
+
+    local isUsable, notEnoughMana = IsUsableAction(self.action)
+    if isUsable then
+        _G[self:GetName().."Icon"]:SetVertexColor(1, 1, 1)
+    elseif notEnoughMana then
+        _G[self:GetName().."Icon"]:SetVertexColor(unpack(cfg.color.OutOfMana))
+    else
+        _G[self:GetName().."Icon"]:SetVertexColor(unpack(cfg.color.NotUsable))
+    end
+end)
+
+-- Hide Possess Frame Background
 
 do
     for i = 2, 3 do
         for _, object in pairs({
-            _G["PossessBackground1"],
-            _G["PossessBackground2"],
-        }) do
-            if ( object:IsObjectType("Frame") or object:IsObjectType("Button") ) then
+                _G["PossessBackground1"],
+                _G["PossessBackground2"],
+            }) do
+            if object:IsObjectType("Frame") or object:IsObjectType("Button") then
                 object:UnregisterAllEvents()
                 object:SetScript("OnEnter", nil)
                 object:SetScript("OnLeave", nil)
@@ -303,15 +336,15 @@ do
     end
 end
 
-    -- Force Hotkey Update
+-- Force Hotkey Update
 
 local frame = CreateFrame("Frame", nil)
 frame:RegisterEvent("PLAYER_LOGIN")
 
 frame:SetScript("OnEvent", function(self, event, ...)
-    if ( event == "PLAYER_LOGIN" ) then
+    if event == "PLAYER_LOGIN" then
         local bagBinding = GetBindingKey("NBAGS_TOGGLE") or "ALT-CTRL-B"
         local binding = SetBinding(bagBinding,"NBAGS_TOGGLE")
-		frame:UnregisterEvent("PLAYER_LOGIN")
+        frame:UnregisterEvent("PLAYER_LOGIN")
     end
 end)

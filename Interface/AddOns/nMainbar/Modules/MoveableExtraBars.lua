@@ -1,7 +1,7 @@
 local _, nMainbar = ...
 local cfg = nMainbar.Config
 
-if ( not cfg.MainMenuBar.moveableExtraBars ) then
+if not cfg.MainMenuBar.moveableExtraBars then
     return
 end
 
@@ -30,7 +30,7 @@ for _, button in pairs({
 
     button:RegisterForDrag("LeftButton")
     button:HookScript("OnDragStart", function(self)
-        if ( IsShiftKeyDown() and IsAltKeyDown() ) then
+        if IsShiftKeyDown() and IsAltKeyDown() then
             self:StartMoving()
         end
     end)

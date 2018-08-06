@@ -3,9 +3,9 @@
 ## RequiredDeps: !Beautycase
 
 config.lua
-
 core.lua
 copy.lua
 hyperlink.lua
 urlcopy.lua
 whisper.lua
+

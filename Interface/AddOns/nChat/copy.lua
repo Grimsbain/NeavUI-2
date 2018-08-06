@@ -1,3 +1,4 @@
+
 local _, nChat = ...
 local cfg = nChat.Config
 
@@ -28,7 +29,7 @@ local closeButton = CreateFrame("Button", nil, container, "UIPanelCloseButton")
 closeButton:SetPoint("TOPRIGHT", 0, -1)
 
 local copyBox = CreateFrame("EditBox", nil, container)
-copyBox:SetSize(chatWidth - 38, chatHeight - 38) -- a ScrollFrame"s child needs to have its size set explicitly
+copyBox:SetSize(chatWidth - 38, chatHeight - 38) -- a ScrollFrame's child needs to have its size set explicitly
 copyBox:SetMultiLine(true)
 copyBox:SetAutoFocus(false)
 copyBox:SetScript("OnEscapePressed", function()
@@ -57,8 +58,8 @@ end
 local function CopyChat(chat)
     ToggleFrame(container)
 
-    if ( container:IsShown() ) then
-        if ( cfg.showInputBoxAbove ) then
+    if container:IsShown() then
+        if cfg.showInputBoxAbove then
             local editBox = _G[chat:GetName().."EditBox"]
             container:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 3, 10)
             container:SetPoint("BOTTOMRIGHT", editBox, "TOPRIGHT", -3, 10)
@@ -109,7 +110,7 @@ local function CreateCopyButton(self)
         self.Copy:GetNormalTexture():ClearAllPoints()
         self.Copy:GetNormalTexture():SetPoint("CENTER")
 
-        if ( self.Copy:IsMouseOver() ) then
+        if self.Copy:IsMouseOver() then
             CopyChat(self)
         end
     end)
@@ -118,10 +119,7 @@ end
 local function EnableCopyButton()
     for _, v in pairs(CHAT_FRAMES) do
         local chat = _G[v]
-        local chatName = chat:GetName()
-        local chatTabText = _G[chatName.."TabText"]:GetText()
-
-        if ( chat and not chat.Copy ) then
+        if chat and not chat.Copy then
             CreateCopyButton(chat)
         end
     end

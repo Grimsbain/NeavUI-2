@@ -4,18 +4,18 @@ local cfg = nMainbar.Config
 BINDING_HEADER_NBAGS = "nMainbar"
 BINDING_NAME_NBAGS_TOGGLE = "Bag Bar Toggle"
 
-if ( not cfg.showPicomenu ) then
-	function ToggleBags() end
+if not cfg.showPicomenu then
+    function ToggleBags() end
     return
 end
 
     -- Saved Variable Setup
 
-if ( BagsShown == nil ) then
+if BagsShown == nil then
     BagsShown = false
 end
 
-	-- Clear frame position.
+    -- Clear frame position.
 
 MainMenuBarBackpackButton:ClearAllPoints()
 CharacterBag0Slot:ClearAllPoints()
@@ -38,7 +38,7 @@ CharacterMicroButton:ClearAllPoints()
 CharacterMicroButton:SetPoint("BOTTOMLEFT", UIParent, 9000, 9000)
 
 hooksecurefunc("MoveMicroButtons", function(anchor, achorTo, relAnchor, x, y, isStacked)
-    if ( not isStacked ) then
+    if not isStacked then
         CharacterMicroButton:ClearAllPoints()
         CharacterMicroButton:SetPoint("BOTTOMLEFT", UIParent, 9000, 9000)
     end
@@ -57,7 +57,7 @@ end
     -- Hide Bags
 
 local function BagHide()
-	MainMenuBarBackpackButton:Hide()
+    MainMenuBarBackpackButton:Hide()
     CharacterBag0Slot:Hide()
     CharacterBag1Slot:Hide()
     CharacterBag2Slot:Hide()
@@ -67,7 +67,7 @@ end
     -- Used to toggle bag with keybind or slash command /neavbag.
 
 function ToggleBags()
-    if ( not BagsShown ) then
+    if not BagsShown then
         BagShow()
         BagsShown = true
     else
@@ -79,21 +79,21 @@ end
     -- Hides or shows bags on start up depending on saved variable.
 
 local function onEvent(self, event, ...)
-	local name = ...
-	if ( name == "nMainbar" ) then
-		if ( BagsShown ) then
-			BagShow()
-		else
-			BagHide()
-		end
-	end
+    local name = ...
+    if name == "nMainbar" then
+        if BagsShown then
+            BagShow()
+        else
+            BagHide()
+        end
+    end
 end
 
 local addon = CreateFrame("Frame")
 addon:SetScript("OnEvent", onEvent)
 addon:RegisterEvent("ADDON_LOADED")
 
-	-- Slash Command
+        -- Slash Command
 
 SlashCmdList["nBag_Toggle"] = function()
     ToggleBags()

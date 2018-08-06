@@ -1,3 +1,4 @@
+
 local _, nChat = ...
 local cfg = nChat.Config
 
@@ -56,7 +57,7 @@ _G.CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:INSTANCE_CHAT|h[IL]|h %s:\32"
 
 local AddMessage = ChatFrame1.AddMessage
 local function FCF_AddMessage(self, text, ...)
-    if ( type(text) == "string" ) then
+    if type(text) == "string" then
         text = gsub(text, "(|HBNplayer.-|h)%[(.-)%]|h", "%1%2|h")
         text = gsub(text, "(|Hplayer.-|h)%[(.-)%]|h", "%1%2|h")
         text = gsub(text, "%[(%d0?)%. (.-)%]", "(%1)")
@@ -65,10 +66,26 @@ local function FCF_AddMessage(self, text, ...)
     return AddMessage(self, text, ...)
 end
 
-    -- Tab text colors.
+    -- Quick Join Button Options
+
+if cfg.enableQuickJoinButton then
+    QuickJoinToastButton:ClearAllPoints()
+    QuickJoinToastButton:SetPoint("BOTTOMLEFT", ChatFrame1Tab, "TOPLEFT", 0, 0)
+else
+    QuickJoinToastButton:SetAlpha(0)
+    QuickJoinToastButton:EnableMouse(false)
+    QuickJoinToastButton:UnregisterAllEvents()
+end
+
+    -- Hide the menu.
+
+ChatFrameMenuButton:SetAlpha(0)
+ChatFrameMenuButton:EnableMouse(false)
+
+    -- Tab text colors for the tabs
 
 hooksecurefunc("FCFTab_UpdateColors", function(self, selected)
-    if ( selected ) then
+    if selected then
         self:GetFontString():SetTextColor(0, 0.75, 1)
     else
         self:GetFontString():SetTextColor(1, 1, 1)
@@ -82,8 +99,8 @@ hooksecurefunc("FCF_FadeOutChatFrame", function(chatFrame)
     local chatTab = _G[frameName.."Tab"]
     local tabGlow = _G[frameName.."TabGlow"]
 
-    if ( not tabGlow:IsShown() ) then
-        if ( frameName.isDocked ) then
+    if not tabGlow:IsShown() then
+        if frameName.isDocked then
             securecall("UIFrameFadeOut", chatTab, CHAT_FRAME_FADE_OUT_TIME, chatTab:GetAlpha(), CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA)
         else
             securecall("UIFrameFadeOut", chatTab, CHAT_FRAME_FADE_OUT_TIME, chatTab:GetAlpha(), CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA)
@@ -94,15 +111,15 @@ end)
     -- Improve mousewheel scrolling.
 
 hooksecurefunc("FloatingChatFrame_OnMouseScroll", function(self, direction)
-    if ( direction > 0 ) then
-        if ( IsShiftKeyDown() ) then
+    if direction > 0 then
+        if IsShiftKeyDown() then
             self:ScrollToTop()
         else
             self:ScrollUp()
             self:ScrollUp()
         end
-    elseif ( direction < 0)  then
-        if ( IsShiftKeyDown() ) then
+    elseif direction < 0 then
+        if IsShiftKeyDown() then
             self:ScrollToBottom()
         else
             self:ScrollDown()
@@ -127,7 +144,7 @@ local function SkinTab(self)
     local tab = _G[self.."Tab"]
     for i = 1, select("#", tab:GetRegions()) do
         local texture = select(i, tab:GetRegions())
-        if ( texture and texture:GetObjectType() == "Texture" ) then
+        if texture and texture:GetObjectType() == "Texture" then
             texture:SetTexture(nil)
         end
     end
@@ -135,7 +152,7 @@ local function SkinTab(self)
     local tabText = _G[self.."TabText"]
     tabText:SetJustifyH("CENTER")
     tabText:SetWidth(60)
-    if ( cfg.tab.fontOutline ) then
+    if cfg.tab.fontOutline then
         tabText:SetFont(font, cfg.tab.fontSize, "OUTLINE")
         tabText:SetShadowOffset(0, 0)
     else
@@ -167,9 +184,9 @@ local function SkinTab(self)
         local hasNofication = tabGlow:IsShown()
 
         local r, g, b
-        if ( _G[self] == SELECTED_CHAT_FRAME and chat.isDocked ) then
+        if _G[self] == SELECTED_CHAT_FRAME and chat.isDocked then
             r, g, b = e1, e2, e3
-        elseif ( hasNofication ) then
+        elseif hasNofication then
             r, g, b = s1, s2, s3
         else
             r, g, b = n1, n2, n3
@@ -179,19 +196,19 @@ local function SkinTab(self)
     end)
 
     hooksecurefunc(tab, "Show", function()
-        if ( not tab.wasShown ) then
+        if not tab.wasShown then
             local hasNofication = tabGlow:IsShown()
 
-            if ( chat:IsMouseOver() ) then
+            if chat:IsMouseOver() then
                 tab:SetAlpha(CHAT_FRAME_TAB_NORMAL_MOUSEOVER_ALPHA)
             else
                 tab:SetAlpha(CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA)
             end
 
             local r, g, b
-            if ( _G[self] == SELECTED_CHAT_FRAME and chat.isDocked ) then
+            if _G[self] == SELECTED_CHAT_FRAME and chat.isDocked then
                 r, g, b = e1, e2, e3
-            elseif ( hasNofication ) then
+            elseif hasNofication then
                 r, g, b = s1, s2, s3
             else
                 r, g, b = n1, n2, n3
@@ -207,11 +224,11 @@ end
 local function ModChat(self)
     local chat = _G[self]
 
-    if ( not cfg.chatOutline ) then
+    if not cfg.chatOutline then
         chat:SetShadowOffset(1, -1)
     end
 
-    if ( cfg.disableFade ) then
+    if cfg.disableFade then
         chat:SetFading(false)
     end
 
@@ -224,7 +241,7 @@ local function ModChat(self)
     chat:SetMaxResize(UIParent:GetWidth(), UIParent:GetHeight())
     chat:SetMinResize(150, 25)
 
-    if ( self ~= "ChatFrame2" ) then
+    if self ~= "ChatFrame2" then
         chat.AddMessage = FCF_AddMessage
     end
 
@@ -250,7 +267,7 @@ local function ModChat(self)
 
     _G[self.."EditBox"]:SetAltArrowKeyMode(cfg.ignoreArrows)
 
-    if ( cfg.showInputBoxAbove ) then
+    if cfg.showInputBoxAbove then
         local tabHeight = _G[self.."Tab"]:GetHeight()
         _G[self.."EditBox"]:ClearAllPoints()
         _G[self.."EditBox"]:SetPoint("BOTTOMLEFT", chat, "TOPLEFT", 0, tabHeight + 5)
@@ -267,12 +284,12 @@ local function ModChat(self)
     _G[self.."EditBox"]:CreateBeautyBorder(11)
     _G[self.."EditBox"]:SetBeautyBorderPadding(-2, -1, -2, -1, -2, -1, -2, -1)
 
-    if ( cfg.enableBorderColoring ) then
+    if cfg.enableBorderColoring then
         _G[self.."EditBox"]:SetBeautyBorderTexture("white")
 
         hooksecurefunc("ChatEdit_UpdateHeader", function(editBox)
             local type = editBox:GetAttribute("chatType")
-            if ( not type ) then
+            if not type then
                 return
             end
 
@@ -283,43 +300,67 @@ local function ModChat(self)
 end
 
 local function SetChatStyle()
-	for _, frame in pairs(CHAT_FRAMES) do
+    for _, frame in pairs(CHAT_FRAMES) do
         local chat = _G[frame]
 
-		if ( chat ) then
-			-- chat:SetUserPlaced(true)
-			chat:SetClampRectInsets(-37, 56, 0, -12)
+        if chat then
+            chat:SetClampRectInsets(-37, 56, 0, -12)
 
-			if ( not chat.hasModification ) then
-				ModChat(chat:GetName())
+            if not chat.hasModification then
+                ModChat(chat:GetName())
 
-				if ( cfg.enableChatWindowBorder ) then
-					if ( chat.Background ) then
-						chat.BorderFrame = CreateFrame("Frame")
-						chat.BorderFrame:SetParent(chat)
-						chat.BorderFrame:SetAllPoints(chat.Background)
-						chat.BorderFrame:CreateBeautyBorder(12)
-						chat.BorderFrame:SetBeautyBorderPadding(2)
-					end
-				end
+                if cfg.enableChatWindowBorder then
+                    if chat.Background then
+                        chat.BorderFrame = CreateFrame("Frame")
+                        chat.BorderFrame:SetParent(chat)
+                        chat.BorderFrame:SetAllPoints(chat.Background)
+                        chat.BorderFrame:CreateBeautyBorder(12)
+                        chat.BorderFrame:SetBeautyBorderPadding(2)
+                    end
+                end
 
-				chat.hasModification = true
-			end
+                chat.hasModification = true
+            end
         end
     end
 end
 hooksecurefunc("FCF_OpenTemporaryWindow", SetChatStyle)
 SetChatStyle()
 
-    -- Modify the GMChatFrame and play a sound when you receive a whisper.
+    -- Chat menu, just a middle click on the chatframe 1 tab
+
+hooksecurefunc("ChatFrameMenu_UpdateAnchorPoint", function()
+    if FCF_GetButtonSide(DEFAULT_CHAT_FRAME) == "right" then
+        ChatMenu:ClearAllPoints()
+        ChatMenu:SetPoint("BOTTOMRIGHT", ChatFrame1Tab, "TOPLEFT")
+    else
+        ChatMenu:ClearAllPoints()
+        ChatMenu:SetPoint("BOTTOMLEFT", ChatFrame1Tab, "TOPRIGHT")
+    end
+end)
+
+ChatFrame1Tab:RegisterForClicks("AnyUp")
+ChatFrame1Tab:HookScript("OnClick", function(self, button)
+    if button == "MiddleButton" or button == "Button4" or button == "Button5" then
+        if ChatMenu:IsShown() then
+            ChatMenu:Hide()
+        else
+            ChatMenu:Show()
+        end
+    else
+        ChatMenu:Hide()
+    end
+end)
+
+    -- Modify the gm chatframe and add a sound notification on incoming whispers
 
 local eventWatcher = CreateFrame("Frame")
 eventWatcher:RegisterEvent("ADDON_LOADED")
 eventWatcher:RegisterEvent("CHAT_MSG_WHISPER")
 eventWatcher:SetScript("OnEvent", function(self, event, ...)
-    if ( event == "ADDON_LOADED" ) then
+    if event == "ADDON_LOADED" then
         local name = ...
-        if ( name == "Blizzard_GMChatUI" ) then
+        if name == "Blizzard_GMChatUI" then
             GMChatFrame:EnableMouseWheel(true)
             GMChatFrame:SetScript("OnMouseWheel", ChatFrame1:GetScript("OnMouseWheel"))
             GMChatFrame:SetHeight(200)
@@ -332,19 +373,19 @@ eventWatcher:SetScript("OnEvent", function(self, event, ...)
 
             GMChatFrameBottomButton:SetAlpha(0)
             GMChatFrameBottomButton:EnableMouse(false)
-        elseif ( name == "Blizzard_CombatLog" ) then
+        elseif name == "Blizzard_CombatLog" then
             hooksecurefunc("FCF_DockUpdate", function()
-                if ( COMBATLOG.isDocked ) then
+                if COMBATLOG.isDocked then
                     COMBATLOG:SetClampRectInsets(-37, 56, 0, -12)
                 end
             end)
         end
     end
 
-    if ( event == "CHAT_MSG_WHISPER" ) then
-		if ( cfg.alwaysAlertOnWhisper ) then
-			PlaySound(SOUNDKIT.TELL_MESSAGE)
-		end
+    if event == "CHAT_MSG_WHISPER" then
+        if cfg.alwaysAlertOnWhisper then
+            PlaySound(SOUNDKIT.TELL_MESSAGE)
+        end
     end
 end)
 
@@ -356,7 +397,7 @@ local combatLog = {
     isNotRadio = true,
 
     func = function()
-        if ( not LoggingCombat() ) then
+        if not LoggingCombat() then
             LoggingCombat(true)
             DEFAULT_CHAT_FRAME:AddMessage(COMBATLOGENABLED, 1, 1, 0)
         else
@@ -366,7 +407,7 @@ local combatLog = {
     end,
 
     checked = function()
-        if ( LoggingCombat() ) then
+        if LoggingCombat() then
             return true
         else
             return false
@@ -380,7 +421,7 @@ local chatLog = {
     isNotRadio = true,
 
     func = function()
-        if ( not LoggingChat() ) then
+        if not LoggingChat() then
             LoggingChat(true)
             DEFAULT_CHAT_FRAME:AddMessage(CHATLOGENABLED, 1, 1, 0)
         else
@@ -390,7 +431,7 @@ local chatLog = {
     end,
 
     checked = function()
-        if ( LoggingChat() ) then
+        if LoggingChat() then
             return true
         else
             return false

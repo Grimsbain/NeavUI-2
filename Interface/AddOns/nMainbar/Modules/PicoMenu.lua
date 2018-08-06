@@ -1,11 +1,11 @@
 local _, nMainbar = ...
 local cfg = nMainbar.Config
 
-if ( not cfg.showPicomenu ) then
+if not cfg.showPicomenu then
     return
 end
 
- -- Pico Menu Dropdown
+    -- Pico Menu Dropdown
 
 local x, x2, n = nil, false
 local v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11
@@ -33,14 +33,14 @@ local menuList = {
         text = SPELLBOOK_ABILITIES_BUTTON,
         icon = "Interface\\MINIMAP\\TRACKING\\Class",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
-				ToggleSpellBook(BOOKTYPE_SPELL)
+            if not nMainbar:IsTaintable() then
+                ToggleSpellBook(BOOKTYPE_SPELL)
             else
                 UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
-		disabled = nMainbar:IsTaintable(),
+        disabled = nMainbar:IsTaintable(),
         fontObject = Game13Font,
     },
     {
@@ -65,7 +65,7 @@ local menuList = {
         text = QUESTLOG_BUTTON,
         icon = "Interface\\GossipFrame\\ActiveQuestIcon",
         func = function()
-			ToggleQuestLog()
+            ToggleQuestLog()
         end,
         notCheckable = true,
         fontObject = Game13Font,
@@ -102,7 +102,7 @@ local menuList = {
         text = DUNGEONS_BUTTON,
         icon = "Interface\\LFGFRAME\\BattleNetWorking0",
         func = function()
-			ToggleLFDParentFrame()
+            ToggleLFDParentFrame()
         end,
         notCheckable = true,
         fontObject = Game13Font,
@@ -129,23 +129,23 @@ local menuList = {
         text = MOUNTS,
         icon = "Interface\\MINIMAP\\TRACKING\\StableMaster",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
-               ToggleCollectionsJournal(1)
+            if not nMainbar:IsTaintable() then
+                ToggleCollectionsJournal(1)
             else
-				UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
+                UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
         fontObject = Game13Font,
     },
-	{
+    {
         text = PETS,
         icon = "Interface\\MINIMAP\\TRACKING\\StableMaster",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
+            if not nMainbar:IsTaintable() then
                 ToggleCollectionsJournal(2)
             else
-				UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
+                UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
@@ -155,10 +155,10 @@ local menuList = {
         text = TOY_BOX,
         icon = "Interface\\MINIMAP\\TRACKING\\Reagents",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
+            if not nMainbar:IsTaintable() then
                 ToggleCollectionsJournal(3)
             else
-				UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
+                UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
@@ -168,10 +168,10 @@ local menuList = {
         text = HEIRLOOMS,
         icon = "Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
+            if not nMainbar:IsTaintable() then
                 ToggleCollectionsJournal(4)
             else
-				UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
+                UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
@@ -181,10 +181,10 @@ local menuList = {
         text = WARDROBE,
         icon = "Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle",
         func = function()
-            if ( not nMainbar:IsTaintable() ) then
+            if not nMainbar:IsTaintable() then
                 ToggleCollectionsJournal(5)
             else
-				UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
+                UIErrorsFrame:AddMessage(BLOCKED_IN_COMBAT, 1, 0, 0)
             end
         end,
         notCheckable = true,
@@ -212,7 +212,7 @@ local menuList = {
         text = BATTLEFIELD_MINIMAP,
         colorCode = "|cff999999",
         func = function()
-			ToggleBattlefieldMap()
+            ToggleBattlefieldMap()
         end,
         notCheckable = true,
         fontObject = Game13Font,
@@ -242,7 +242,7 @@ local addonMenuTable = {
 }
 
 local function UpdateAddOnTable()
-    if ( IsAddOnLoaded("oUF_NeavRaid") and not v1 ) then
+    if IsAddOnLoaded("oUF_NeavRaid") and not v1 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v1 = true
@@ -257,7 +257,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("VuhDo") and not v2 ) then
+    if IsAddOnLoaded("VuhDo") and not v2 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v2 = true
@@ -272,16 +272,16 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( (IsAddOnLoaded("Grid") or IsAddOnLoaded("Grid2")) and not v3 ) then
+    if (IsAddOnLoaded("Grid") or IsAddOnLoaded("Grid2")) and not v3 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v3 = true
         addonMenuTable[2].menuList[n] = {
             text = "Grid",
             func = function()
-                if ( IsAddOnLoaded("Grid2") ) then
+                if IsAddOnLoaded("Grid2") then
                     ToggleFrame(Grid2LayoutFrame)
-                elseif ( IsAddOnLoaded("Grid") ) then
+                elseif IsAddOnLoaded("Grid") then
                     ToggleFrame(GridLayoutFrame)
                 end
             end,
@@ -291,14 +291,14 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("Omen") and not v4 ) then
+    if IsAddOnLoaded("Omen") and not v4 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v4 = true
         addonMenuTable[2].menuList[n] = {
             text = "Omen",
             func = function()
-                if ( IsShiftKeyDown() ) then
+                if IsShiftKeyDown() then
                     Omen:Toggle()
                 else
                     Omen:ShowConfig()
@@ -310,24 +310,24 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("PhoenixStyle") and not v5 ) then
+    if IsAddOnLoaded("PhoenixStyle") and not v5 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v5 = true
         addonMenuTable[2].menuList[n] = {
-                text = "PhoenixStyle",
-                func = function()
-                    ToggleFrame(PSFmain1)
-                    ToggleFrame(PSFmain2)
-                    ToggleFrame(PSFmain3)
-                end,
-                notCheckable = true,
-                keepShownOnClick = true,
-                fontObject = Game13Font,
-            }
+            text = "PhoenixStyle",
+            func = function()
+                ToggleFrame(PSFmain1)
+                ToggleFrame(PSFmain2)
+                ToggleFrame(PSFmain3)
+            end,
+            notCheckable = true,
+            keepShownOnClick = true,
+            fontObject = Game13Font,
+        }
     end
 
-    if ( IsAddOnLoaded("DBM-Core") and not v6 ) then
+    if IsAddOnLoaded("DBM-Core") and not v6 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v6 = true
@@ -342,7 +342,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("Skada") and not v7 ) then
+    if IsAddOnLoaded("Skada") and not v7 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v7 = true
@@ -357,7 +357,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("Recount") and not v8 ) then
+    if IsAddOnLoaded("Recount") and not v8 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v8 = true
@@ -365,7 +365,7 @@ local function UpdateAddOnTable()
             text = "Recount",
             func = function()
                 ToggleFrame(Recount.MainWindow)
-                if ( Recount.MainWindow:IsShown() ) then
+                if Recount.MainWindow:IsShown() then
                     Recount:RefreshMainWindow()
                 end
             end,
@@ -375,7 +375,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("TinyDPS") and not v9 ) then
+    if IsAddOnLoaded("TinyDPS") and not v9 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v9 = true
@@ -390,14 +390,14 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("Numeration") and not v10 ) then
+    if IsAddOnLoaded("Numeration") and not v10 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v10 = true
         addonMenuTable[2].menuList[n] = {
             text = "Numeration",
             func = function()
-                if ( not IsShiftKeyDown() ) then
+                if not IsShiftKeyDown() then
                     Numeration:ToggleVisibility()
                 else
                     StaticPopup_Show("RESET_DATA")
@@ -409,7 +409,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("AtlasLoot") and not v11 ) then
+    if IsAddOnLoaded("AtlasLoot") and not v11 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v11 = true
@@ -424,7 +424,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( IsAddOnLoaded("Altoholic") and not v12 ) then
+    if IsAddOnLoaded("Altoholic") and not v12 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v12 = true
@@ -439,16 +439,16 @@ local function UpdateAddOnTable()
         }
     end
 
-	if ( IsAddOnLoaded("Details") and not v13 ) then
+    if IsAddOnLoaded("Details") and not v13 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v13 = true
         addonMenuTable[2].menuList[n] = {
             text = "Details",
             func = function()
-                if ( not IsShiftKeyDown() ) then
+                if not IsShiftKeyDown() then
                     _detalhes:ToggleWindow(1)
-					_detalhes:ToggleWindow(2)
+                    _detalhes:ToggleWindow(2)
                 else
                     _detalhes.tabela_historico:resetar()
                 end
@@ -459,19 +459,19 @@ local function UpdateAddOnTable()
         }
     end
 
-	if ( IsAddOnLoaded("BigWigs") and not v14 ) then
+    if IsAddOnLoaded("BigWigs") and not v14 then
         x = true
         n = (#addonMenuTable[2].menuList)+1
         v14 = true
         addonMenuTable[2].menuList[n] = {
             text = "BigWigs",
             func = function()
-				if ( BigWigsOptions ) then
-					BigWigsOptions:Open()
-				else
-					LoadAddOn("BigWigs_Options")
-					BigWigsOptions:Open()
-				end
+                if BigWigsOptions then
+                    BigWigsOptions:Open()
+                else
+                    LoadAddOn("BigWigs_Options")
+                    BigWigsOptions:Open()
+                end
             end,
             notCheckable = true,
             keepShownOnClick = true,
@@ -479,7 +479,7 @@ local function UpdateAddOnTable()
         }
     end
 
-    if ( x and not x2 ) then
+    if x and not x2 then
         table.insert(menuList, addonMenuTable[1])
         table.insert(menuList, addonMenuTable[2])
         x2 = true
@@ -513,13 +513,13 @@ alertFrame.Text:SetText(TALENT_MICRO_BUTTON_UNSPENT_TALENTS)
 alertFrame:SetPoint("BOTTOM", picoMenu, "TOP", 0, 10)
 
 picoMenu:SetScript("OnEvent", function(self, event, ...)
-    if ( event == "ADDON_LOADED" ) then
+    if event == "ADDON_LOADED" then
         UpdateAddOnTable(arg1)
-    elseif ( event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_LEVEL_UP" or event == "PLAYER_SPECIALIZATION_CHANGED" or event == "PLAYER_TALENT_UPDATE" ) then
-        if ( UnitLevel("player") >= SHOW_TALENT_LEVEL and GetNumUnspentTalents() > 0 ) then
+    elseif event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_LEVEL_UP" or event == "PLAYER_SPECIALIZATION_CHANGED" or event == "PLAYER_TALENT_UPDATE" then
+        if UnitLevel("player") >= SHOW_TALENT_LEVEL and GetNumUnspentTalents() > 0 then
             alertFrame:Show()
-		else
-			alertFrame:Hide()
+        else
+            alertFrame:Hide()
         end
     end
 end)
@@ -533,17 +533,17 @@ picoMenu:SetScript("OnMouseUp", function(self, button)
     self:GetNormalTexture():ClearAllPoints()
     self:GetNormalTexture():SetPoint("CENTER")
 
-    if ( button == "LeftButton" ) then
-        if ( self:IsMouseOver() ) then
-            if ( DropDownList1:IsShown() ) then
+    if button == "LeftButton" then
+        if self:IsMouseOver() then
+            if DropDownList1:IsShown() then
                 DropDownList1:Hide()
             else
                 EasyMenu(menuList, menuFrame, self, 3, 290, "MENU", 5)
             end
         end
     else
-        if ( self:IsMouseOver() ) then
-            if ( not GameMenuFrame:IsVisible() ) then
+        if self:IsMouseOver() then
+            if not GameMenuFrame:IsVisible() then
                 ShowUIPanel(GameMenuFrame)
             else
                 HideUIPanel(GameMenuFrame)

@@ -1,5 +1,5 @@
 <Bindings>
     <Binding name="NBAGS_TOGGLE" header="NBAGS" category="nMainbar">
-		ToggleBags()
+        ToggleBags()
     </Binding>
 </Bindings>

@@ -1,14 +1,17 @@
+
 local _, nChat = ...
 
 nChat.Config = {
-	alwaysAlertOnWhisper = true,
+    alwaysAlertOnWhisper = true,
 
     disableFade = false,
     chatOutline = true,
 
     enableChatWindowBorder = true,
-    enableBorderColoring = true,
+
+    enableQuickJoinButton = false,
     enableHyperlinkTooltip = false,
+    enableBorderColoring = true,
 
     showInputBoxAbove = true,  -- Show the chat input box above the chat window
     ignoreArrows = false, -- Ignore the arrow keys when typing in the input box unless alt is pressed
