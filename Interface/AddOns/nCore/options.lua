@@ -192,10 +192,6 @@ Options:SetScript("OnShow", function()
 
     -- Right Side --
 
-    local AddonTitle = Options:CreateFontString("$parentTitle", "ARTWORK", "GameFontNormalLarge")
-    AddonTitle:SetPoint("TOPRIGHT", -16, -16)
-    AddonTitle:SetText(Options.name)
-
     local ReloadButton = CreateFrame("BUTTON", "ReloadButton", RightSide, "UIPanelButtonTemplate")
     ReloadButton:SetSize(100, 24)
     ReloadButton:SetPoint("BOTTOMRIGHT", RightSide, -10, 10)
