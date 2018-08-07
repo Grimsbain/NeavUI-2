@@ -1,4 +1,0 @@
-## Interface: 80000
-## Title: !Beautycase
-
-core.lua
